@@ -45,102 +45,131 @@ FOR LEGAL PURPOSES ONLY:
 
 
 
-                  .___      ____              __    ________  
-                __| _/____ /_   | ________ __|  | __\_____  \ 
-               / __ |\__  \ |   |/  ___/  |  \  |/ /  _(__  < 
-              / /_/ | / __ \|   |\___ \|  |  /    <  /       \
-              \____ |(____  /___/____  >____/|__|_ \/______  /
-                   \/     \/         \/           \/       \/ 
+	                  .___      ____              __    ________  
+	                __| _/____ /_   | ________ __|  | __\_____  \ 
+	               / __ |\__  \ |   |/  ___/  |  \  |/ /  _(__  < 
+	              / /_/ | / __ \|   |\___ \|  |  /    <  /       \
+	              \____ |(____  /___/____  >____/|__|_ \/______  /
+	                   \/     \/         \/           \/       \/ 
 
 
 
-____________________________________________________________________________
+________________________________________________________________________________________
 
 
 KALI TOOLS
 ::::::::::
 
 # Actualizar e instalar todas la herramientas de Kali Linux
+	sudo apt update && sudo apt upgrade -y
+	sudo apt update && sudo apt install kali-tools-*
 
-    sudo apt update && sudo apt upgrade -y
-    sudo apt update && sudo apt install kali-tools-*
+
+ENUMERACION
+|||||||||||
 
 
 DESCUBRIMIENTO DE HOSTS
 :::::::::::::::::::::::
 
-    sudo arp-scan -I [interfaz] [rango IP/MS] -g
-    sudo netdiscover -r [rango IP/MS]
+# Enumera los host
+	sudo arp-scan [rango IP/MS] -g
+	sudo arp-scan -I [interfaz] [rango IP/MS] -g
+	sudo netdiscover -r [rango IP/MS]
 
 
 NMAP
 ::::
 
-    sudo nmap -vv -sC -sV -p- [RHOST]
-    sudo nmap -sV -sU [RHOST] -- escaneo UDP
-    sudo nmap -T4 -sC -sV --script vuln [RHOST] -- buscar vulns
-    sudo nmap -A -T4 -p- -sS -sV -oN initial --script discovery [RHOST]
-    sudo nmap -sC -sV -p- --scan-delay 5s [RHOST]
+# Enumera los puertos abiertos
+	sudo nmap -vv -sC -sV -p- [RHOST]
+	sudo nmap -sV -sU [RHOST] 			escaneo UDP
+	sudo nmap -T4 -sC -sV --script vuln [RHOST]	busca vuln
+	sudo nmap -vv [rango IP/MS]
+	sudo nmap -sC -sV -p- --scan-delay 5s [RHOST]
+	
+# nmap firewall
+	sudo nmap -vv -sV --mtu 16 --source-port 443 --spoof-mac 81:49:fd:8a:46:51 [RHOST]
+	sudo nmap -vv -sV -f -sS -D 8.8.8.8,20.20.20.20,192.168.54.20,24.132.225.31 [RHOST]
+
+https://nmap.org/man/es/index.html
 
 
+SMB 445
+:::::::
 
+# Mostrar, controlar o manipular recursos compartidos
+	smbclient -L [RHOST] -N
+
+# Conectarse
+	smbclient //[RHOST]/[RECURSO] -N
+# Dentro del recurso listar
+	dir
+# Descargar recursos
+	prompt off
+	mget *
+
+https://www.samba.org/samba/docs/4.9/man-html/smbclient.1.html
 
 ALIAS
 :::::
 
 # Crear alias para agilizar trabajo
-
-    echo "$SHELL"
-    
-/bin/bash	nano ~/.bashrc
-/bin/zsh	nano ~/.zshrc
-/bin/fish	nano ~/.config/fish/config.fish
-
-    sudo nano ~/.zshrc
-
-Introduces alias
-
-    alias upy="sudo apt update && sudo apt upgrade -y"
-
-Ctrl+O (Guardar) y Enter
-Ctrl+X (Cierras)
-
-/bin/bash	source ~/.bashrc
-/bin/zsh	source ~/.zshrc
-/bin/fish	source ~/.config/fish/config.fish
+	echo "$SHELL"
+		/bin/bash	nano ~/.bashrc
+		/bin/zsh	nano ~/.zshrc
+		/bin/fish	nano ~/.config/fish/config.fish
+	sudo nano ~/.zshrc
+# Introduces alias
+	alias upy="sudo apt update && sudo apt upgrade -y"
+	Ctrl+O (guarda) y enter
+	Ctrl+X (cierra)
+		/bin/bash	source ~/.bashrc
+		/bin/zsh	source ~/.zshrc
+		/bin/fish	source ~/.config/fish/config.fish
 
 
 HELP STAT
 :::::::::
 
 # arp-scan # Enumera los host que hay en la red. 
--I          [interfaz] para indicar el interfaz si fuese necesario
--g          ignora los duplicados
+-I          	[interfaz] para indicar el interfaz si fuese necesario
+-g          	ignora los duplicados
 
 # nmap # Enumera los puertos abiertos, solo los 1000 mas comunes.
 -vv 		lista mientras se ejecuta
 -sV 		detecta servicios y versiones 
 -p- 		comprueba todos los puertos
 -p[puerto]	escanea el puerto indicado
--sC			lanza scripts random	
+-sC		lanza scripts
+-Pn		no hace el ping
 --script	elegir un script para utilizar.
-    Ruta de scripts:
+	locate .nse | xargs grep "categories" | grep -oP '".*?"' | sort -u
+			ex: nmap -p[PUERTO] [IP] --script="categoria"
+	listar scripts:
 		ls -lh /usr/share/nmap/scripts/
 		ls -lh /usr/share/nmap/scripts/*ssh*
-	Ex: nmap -vv -sV -p445 --script smb-vuln-cve2009-3103.nse [RHOST]	Usa ese script
-	Ex: nmap -vv -sV -p445 --script vuln [RHOST]	Usa todos los scripts con "vuln"
-	Ex: nmap -vv -sV -p445 --script smb-vuln-* [RHOST]	Usa solo los que empiezen por "smb-vuln-"
--Pn			no hace la resolución de DNS
--T0 a -T5   velocidad del scaneo T3 es la velocidad estandar (-T5 solo entorno controlado)
--A          (solo entorno controlado) intenta detectar versiones y SO
+	ex: nmap -vv -sV -p445 --script smb-vuln-cve2009-3103.nse [RHOST]	usa ese script
+	ex: nmap -vv -sV -p445 --script vuln [RHOST]				usa todos los scripts con "vuln"
+	ex: nmap -vv -sV -p445 --script smb-vuln-* [RHOST]			usa solo los que empiezen por "smb-vuln-"
+-oN[name]	guarda los resultados en txt
+-T0 a -T5	velocidad del scaneo T3 es la velocidad estandar (-T5 solo entorno controlado)
+-A		intenta detectar versiones y SO (solo entorno controlado)
 
+# nmap firewall
+--mtu 8 y 16	reduce el tamaño de los paquetes
+-f		reduce el tamaño de los paquetes al minimo
+--source-port	configura el puerto de origen, imitando la petición desde otro puerto
+-D		falsea IPs, enviando paquetes falsos a la red (tu IP va incluida)
+--spoof-mac	falsifica la direccion MAC de origen
+-sS		realiza escaneo SYN sin establecer una conexion completa
+--max-rate	controla la velocidad
 
+# smbclient # Enumera,modifica,controla los recursos compartidos
+-L		lista los recursos compartidos
+-N		no pide la contraseña
 
-
-
-
-
-
-
-
-
+# smbclient operations #
+dir		lista recursos
+prompt off	no pregunta con mget y mput la confirmacion de tranferencia
+mget *		
