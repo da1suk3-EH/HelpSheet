@@ -76,6 +76,7 @@ DESCUBRIMIENTO DE HOSTS
 	sudo arp-scan [rango IP/MS] -g
 	sudo arp-scan -I [interfaz] [rango IP/MS] -g
 	sudo netdiscover -r [rango IP/MS]
+	sudo nbtscan -r [rango IP/MS]
 
 
 NMAP
@@ -108,8 +109,34 @@ SMB 445
 # Descargar recursos
 	prompt off
 	mget *
+	get [RECURSO]
 
 https://www.samba.org/samba/docs/4.9/man-html/smbclient.1.html
+	
+	enum4linux -a [RHOST]
+	nmap -p445 --script smb* [RHOST]
+	smbmap -H [IP]
+	smbmap -H [IP] -u [user] -p [password]		probar usuario y una única contraseña para ver recursos compartidos
+
+
+RDP 3389
+::::::::
+
+	nmap --script "rdp-enum-encryption or rdp-vuln-ms12-020 or rdp-ntlm-info" -p 3389 -T4 [RHOST]	  lanza 3 scripts importantes para la vuln del 3389 
+	xfreerdp /u:[USER] /p:[PASS] /v:[IP] /cert-ignore	Para conectarse por RDP a un equipo
+
+
+AUTORECON TOOL
+::::::::::::::
+
+# Lanza un conjunto grande de herramientas para enumeracion (no incluye evasion de firewall)
+	sudo apt install autorecon
+	sudo autorecon [RHOST]
+
+
+
+
+
 
 ALIAS
 :::::
@@ -129,6 +156,9 @@ ALIAS
 		/bin/fish	source ~/.config/fish/config.fish
 
 
+
+
+
 HELP STAT
 :::::::::
 
@@ -144,7 +174,7 @@ HELP STAT
 -sC		lanza scripts
 -Pn		no hace el ping
 --script	elegir un script para utilizar.
-	locate .nse | xargs grep "categories" | grep -oP '".*?"' | sort -u
+	locate .nse | xargs grep "categories" | grep -oP '".*?"' | sort -u	muestra las categorias
 			ex: nmap -p[PUERTO] [IP] --script="categoria"
 	listar scripts:
 		ls -lh /usr/share/nmap/scripts/
@@ -172,4 +202,10 @@ HELP STAT
 # smbclient operations #
 dir		lista recursos
 prompt off	no pregunta con mget y mput la confirmacion de tranferencia
-mget *		
+mget *		copia todos los recursos de la carpeta
+get		copia el recurso seleccionado
+
+
+
+
+
