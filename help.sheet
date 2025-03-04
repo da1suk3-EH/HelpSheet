@@ -84,11 +84,11 @@ NMAP
 
 # Enumera los puertos abiertos
 	sudo nmap -vv -sC -sV -p- [RHOST]
-	sudo nmap -sV -sU [RHOST] 			escaneo UDP
-	sudo nmap -T4 -sC -sV --script vuln [RHOST]	busca vuln
+	sudo nmap -sV -sU [RHOST]   ---   escaneo UDP
+	sudo nmap -T4 -sC -sV --script vuln [RHOST]   ---   busca vuln
 	sudo nmap -vv [rango IP/MS]
 	sudo nmap -sC -sV -p- --scan-delay 5s [RHOST]
-	
+
 # nmap firewall
 	sudo nmap -vv -sV --mtu 16 --source-port 443 --spoof-mac 81:49:fd:8a:46:51 [RHOST]
 	sudo nmap -vv -sV -f -sS -D 8.8.8.8,20.20.20.20,192.168.54.20,24.132.225.31 [RHOST]
@@ -101,29 +101,26 @@ SMB 445
 
 # Mostrar, controlar o manipular recursos compartidos
 	smbclient -L [RHOST] -N
-
-# Conectarse
+# Conectarse, listar y descargar recursos
 	smbclient //[RHOST]/[RECURSO] -N
-# Dentro del recurso listar
 	dir
-# Descargar recursos
 	prompt off
 	mget *
 	get [RECURSO]
 
 https://www.samba.org/samba/docs/4.9/man-html/smbclient.1.html
-	
+
 	enum4linux -a [RHOST]
 	nmap -p445 --script smb* [RHOST]
 	smbmap -H [IP]
-	smbmap -H [IP] -u [user] -p [password]		probar usuario y una única contraseña para ver recursos compartidos
+	smbmap -H [IP] -u [user] -p [password]   ---   probar usuario y una única contraseña para ver recursos compartidos
 
 
 RDP 3389
 ::::::::
 
-	nmap --script "rdp-enum-encryption or rdp-vuln-ms12-020 or rdp-ntlm-info" -p 3389 -T4 [RHOST]	  lanza 3 scripts importantes para la vuln del 3389 
-	xfreerdp /u:[USER] /p:[PASS] /v:[IP] /cert-ignore	Para conectarse por RDP a un equipo
+	nmap --script "rdp-enum-encryption or rdp-vuln-ms12-020 or rdp-ntlm-info" -p 3389 -T4 [RHOST]   ---   lanza 3 scripts importantes para la vuln del 3389 
+	xfreerdp /u:[USER] /p:[PASS] /v:[IP] /cert-ignore   ---   conectarse por RDP a un equipo
 
 
 AUTORECON TOOL
@@ -163,25 +160,25 @@ HELP STAT
 :::::::::
 
 # arp-scan # Enumera los host que hay en la red. 
--I          	[interfaz] para indicar el interfaz si fuese necesario
--g          	ignora los duplicados
+-I		[interfaz] para indicar el interfaz si fuese necesario
+-g		ignora los duplicados
 
 # nmap # Enumera los puertos abiertos, solo los 1000 mas comunes.
--vv 		lista mientras se ejecuta
--sV 		detecta servicios y versiones 
--p- 		comprueba todos los puertos
+-vv		lista mientras se ejecuta
+-sV		detecta servicios y versiones 
+-p-		comprueba todos los puertos
 -p[puerto]	escanea el puerto indicado
 -sC		lanza scripts
 -Pn		no hace el ping
 --script	elegir un script para utilizar.
-	locate .nse | xargs grep "categories" | grep -oP '".*?"' | sort -u	muestra las categorias
-			ex: nmap -p[PUERTO] [IP] --script="categoria"
+	locate .nse | xargs grep "categories" | grep -oP '".*?"' | sort -u   ---   muestra las categorias
+		ex: nmap -p[PUERTO] [IP] --script="categoria"
 	listar scripts:
 		ls -lh /usr/share/nmap/scripts/
 		ls -lh /usr/share/nmap/scripts/*ssh*
-	ex: nmap -vv -sV -p445 --script smb-vuln-cve2009-3103.nse [RHOST]	usa ese script
-	ex: nmap -vv -sV -p445 --script vuln [RHOST]				usa todos los scripts con "vuln"
-	ex: nmap -vv -sV -p445 --script smb-vuln-* [RHOST]			usa solo los que empiezen por "smb-vuln-"
+	ex: nmap -vv -sV -p445 --script smb-vuln-cve2009-3103.nse [RHOST]   ---   usa ese script
+	ex: nmap -vv -sV -p445 --script vuln [RHOST]   ---   usa todos los scripts con "vuln"
+	ex: nmap -vv -sV -p445 --script smb-vuln-* [RHOST]   ---   usa solo los que empiezen por "smb-vuln-"
 -oN[name]	guarda los resultados en txt
 -T0 a -T5	velocidad del scaneo T3 es la velocidad estandar (-T5 solo entorno controlado)
 -A		intenta detectar versiones y SO (solo entorno controlado)
