@@ -212,6 +212,55 @@ https://acortar.link/searchsploit
 
 
 
+====================
+===     CRCK     ===
+====================
+
+# Repositorios de diccionarios
+https://github.com/danielmiessler/SecLists
+https://github.com/hackingyseguridad/diccionarios/tree/master
+
+# Kali
+	/usr/share/wordlists/   ---   ubicacion de dicc
+	cat myrockyou.txt | grep [CAMPO]   ---   saber si esta en la lista
+
+
+HASH
+_________________________________________________________________________________________
+
+# Hash identifier / verifier WEB
+https://hashes.com/en/decrypt/hash
+
+# Hash identifier Kali
+	hash-identifier
+	HAST: [HAST]
+# Hash verifier Kali
+	hashcat -m [NºHAST] [HAST] /usr/share/wordlists/rockyou.txt
+
+
+CIFRADO
+_________________________________________________________________________________________
+
+# JohnTheRipper, ver cifrados que admite. 
+	john --list=formats
+	john --list=formats | grep md5
+	john --list=formats | grep MD5
+	sudo john --format=[FORMAT] --wordlist=[path to wordlist] [path to file]
+	sudo john --format=Raw-MD5 --wordlist=/usr/share/wordlists/rockyou.txt /Downloads/hast.txt
+
+# Crack teniendo acceso a /etc/passwd y /etc/shadow
+	unshadow passwd.txt shadow.txt > unshadow.txt
+# Suele ser comun el formato de sha512. Se ra comun usar el --format=sha512crypt
+	john unshadow.txt --wordlist=/usr/share/wordlists/rockyou.txt --format=sha512crypt unshadow.txt
+
+
+
+
+
+
+
+
+
 ALIAS
 _________________________________________________________________________________________
 
@@ -282,8 +331,3 @@ dir		lista recursos
 prompt off	no pregunta con mget y mput la confirmacion de tranferencia
 mget *		copia todos los recursos de la carpeta
 get		copia el recurso seleccionado
-
-
-
-
-
