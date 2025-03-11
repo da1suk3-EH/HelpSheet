@@ -238,7 +238,7 @@ https://hashes.com/en/decrypt/hash
 	hashcat -m [NºHAST] [HAST] /usr/share/wordlists/rockyou.txt
 
 
-CIFRADO
+CRACK CIFRADO CON JOHN
 _________________________________________________________________________________________
 
 # JohnTheRipper, ver cifrados que admite. 
@@ -246,12 +246,55 @@ ________________________________________________________________________________
 	john --list=formats | grep md5
 	john --list=formats | grep MD5
 	sudo john --format=[FORMAT] --wordlist=[path to wordlist] [path to file]
-	sudo john --format=Raw-MD5 --wordlist=/usr/share/wordlists/rockyou.txt /Downloads/hast.txt
+	ex: sudo john --format=Raw-MD5 --wordlist=/usr/share/wordlists/rockyou.txt /Downloads/hast.txt
+
+# Borrar logs de John
+	rm ~/.john/john.*
 
 # Crack teniendo acceso a /etc/passwd y /etc/shadow
 	unshadow passwd.txt shadow.txt > unshadow.txt
-# Suele ser comun el formato de sha512. Se ra comun usar el --format=sha512crypt
+# Suele ser comun el formato de sha512. Sera comun usar el --format=sha512crypt
 	john unshadow.txt --wordlist=/usr/share/wordlists/rockyou.txt --format=sha512crypt unshadow.txt
+
+# Crack pass ZIP RAR con John
+	zip2john [ZIP] > [TXT]
+	rar2john [ZIP] > [TXT]
+	ex: zip2john secure.zip > secure.txt
+	john --wordlist=/usr/share/wordlists/rockyou.txt secure.txt
+
+# Crack clave privada SSH id_rsa
+	ssh2john id_rsa > id_rsa.txt
+	john --wordlist=/usr/share/wordlists/rockyou.txt id_rsa.txt
+	ssh [USER]@[IP]
+	[PASS_SSH]
+
+CRACK CIFRADO ONLINE
+_________________________________________________________________________________________
+
+# Hydra
+
+# Si el protocolo FTP esta abierto, siempre probar a entrar anonimamente 
+	ftp [IP]
+	anonymous
+	ftp> passive
+	ftp> ls
+	ftp> get [FILE]
+	exit
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
