@@ -67,10 +67,28 @@ ________________________________________________________________________________
 	sudo apt update && sudo apt install kali-tools-*
 
 
+ALIAS
+_________________________________________________________________________________________
 
-====================
-===     ENUM     ===
-====================
+# Crear alias para agilizar trabajo
+	echo "$SHELL"
+		/bin/bash	nano ~/.bashrc
+		/bin/zsh	nano ~/.zshrc
+		/bin/fish	nano ~/.config/fish/config.fish
+	sudo nano ~/.zshrc
+# Introduces alias
+	alias upy="sudo apt update && sudo apt upgrade -y"
+	Ctrl+O (guarda) y enter
+	Ctrl+X (cierra)
+		/bin/bash	source ~/.bashrc
+		/bin/zsh	source ~/.zshrc
+		/bin/fish	source ~/.config/fish/config.fish
+
+
+
+===========================
+===     ENUMERACION     ===
+===========================
 
 
 
@@ -102,24 +120,36 @@ ________________________________________________________________________________
 https://nmap.org/man/es/index.html
 
 
+FTP 20/21
+_________________________________________________________________________________________
+
+# Si el protocolo FTP esta abierto, siempre probar a entrar anonimamente 
+	ftp [IP]
+	anonymous
+	ftp> passive
+	ftp> ls
+	ftp> get [FILE]
+	exit
+
+
 SMB 445
 _________________________________________________________________________________________
 
 # Mostrar, controlar o manipular recursos compartidos
 	smbclient -L [RHOST] -N
 # Conectarse, listar y descargar recursos
-	smbclient //[RHOST]/[RECURSO] -N
+	smbclient //[RHOST]/[FILE] -N
 	dir
 	prompt off
 	mget *
-	get [RECURSO]
+	get [FILE]
 
 https://www.samba.org/samba/docs/4.9/man-html/smbclient.1.html
 
 	enum4linux -a [RHOST]
 	nmap -p445 --script smb* [RHOST]
 	smbmap -H [IP]
-	smbmap -H [IP] -u [user] -p [password]   ---   probar usuario y una única contraseña para ver recursos compartidos
+	smbmap -H [IP] -u [USER] -p [PASS]   ---   probar usuario y una única contraseña para ver recursos compartidos
 
 
 RDP 3389
@@ -138,9 +168,9 @@ ________________________________________________________________________________
 
 
 
-====================
-===     EXPL     ===
-====================
+===========================
+===     EXPLOTACION     ===
+===========================
 
 
 
@@ -152,7 +182,7 @@ ________________________________________________________________________________
 # Arranque
 	msfconsole
 # Mostrar categorias
-	show [categoria]
+	show [CATEGORY]
 # Buscar exploit, payload...
 	search [name exploit]
 # Usar la herramienta
@@ -177,7 +207,7 @@ ________________________________________________________________________________
 	C:\Windows\system32>
 
 
-SIN METASPLOIT
+WITHOUT METASPLOIT
 _________________________________________________________________________________________
 
 # Buscar exploits:
@@ -198,10 +228,9 @@ https://acortar.link/searchsploit
 
 
 
-
-====================
-===     ENCD     ===
-====================
+===========================
+===      ENCODEAR       ===
+===========================
 
 
 
@@ -212,9 +241,11 @@ https://acortar.link/searchsploit
 
 
 
-====================
-===     CRCK     ===
-====================
+===========================
+===      CRACKING       ===
+===========================
+
+
 
 # Repositorios de diccionarios
 https://github.com/danielmiessler/SecLists
@@ -238,7 +269,7 @@ https://hashes.com/en/decrypt/hash
 	hashcat -m [NºHAST] [HAST] /usr/share/wordlists/rockyou.txt
 
 
-CRACK CIFRADO CON JOHN
+CRACK WITH JOHN
 _________________________________________________________________________________________
 
 # JohnTheRipper, ver cifrados que admite. 
@@ -258,7 +289,7 @@ ________________________________________________________________________________
 
 # Crack pass ZIP RAR con John
 	zip2john [ZIP] > [TXT]
-	rar2john [ZIP] > [TXT]
+	rar2john [RAR] > [TXT]
 	ex: zip2john secure.zip > secure.txt
 	john --wordlist=/usr/share/wordlists/rockyou.txt secure.txt
 
@@ -268,58 +299,92 @@ ________________________________________________________________________________
 	ssh [USER]@[IP]
 	[PASS_SSH]
 
-CRACK CIFRADO ONLINE
+
+CRACK WITH HYDRA
 _________________________________________________________________________________________
 
 # Hydra
-
-# Si el protocolo FTP esta abierto, siempre probar a entrar anonimamente 
-	ftp [IP]
-	anonymous
-	ftp> passive
-	ftp> ls
-	ftp> get [FILE]
-	exit
-
-	
-	
+	hydra -L --wordlist=[path to wordlist] -P --wordlist=[path to wordlist] [IP] [PORT]
+	hydra -L --wordlist=/usr/share/wordlists/user.txt -P --wordlist=/usr/share/wordlists/pass.txt 10.10.1.10 ssh
+	ssh [USER]@[IP]
+	[PASS_SSH]
 
 
 
+===========================
+===      WEB RISKS      ===
+===========================
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-ALIAS
+GUIA OWASP TOP 10 (2021)
 _________________________________________________________________________________________
 
-# Crear alias para agilizar trabajo
-	echo "$SHELL"
-		/bin/bash	nano ~/.bashrc
-		/bin/zsh	nano ~/.zshrc
-		/bin/fish	nano ~/.config/fish/config.fish
-	sudo nano ~/.zshrc
-# Introduces alias
-	alias upy="sudo apt update && sudo apt upgrade -y"
-	Ctrl+O (guarda) y enter
-	Ctrl+X (cierra)
-		/bin/bash	source ~/.bashrc
-		/bin/zsh	source ~/.zshrc
-		/bin/fish	source ~/.config/fish/config.fish
+AO1:2021-Broken Access Control
+A02:2021-Cryptographic Failures
+A03:2021-Injection
+A04:2021-Insecure Design
+A05:2021-Security Misconfiguration
+A06:2021-Vulnerable and Outdated Components
+A07:2021-Identification and Authentication Failures
+A08:2021-Software and Data Integrity Failures
+A09:2021-Security Logging and Monitoring Failures*
+A10:2021-Server-Side Request Forgery*
+	*From the Survey
+
+https://owasp.org/www-project-top-ten/
+
+
+
+===========================
+===      ENUM  WEB      ===
+===========================
+
+
+
+FIRST STEPS
+_________________________________________________________________________________________
+
+# Comprobar puertos y versiones del 80/443
+	nmap -vv -p80 -sV [IP]
+	nmap -vv -p443 -sV [IP]
+
+# Comprobar si hay una pagina en el buscador
+	http://[IP]   o   https://[IP]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -374,3 +439,11 @@ dir		lista recursos
 prompt off	no pregunta con mget y mput la confirmacion de tranferencia
 mget *		copia todos los recursos de la carpeta
 get		copia el recurso seleccionado
+_________________________________________________________________________________________
+
+# hydra #
+-l		si conocemos el usuario
+-L		si no conocemos el usuario añaciendo el diccionario a usar
+-p		si conocemos la contraseña
+-P		si no conocemos la contraseña añaciendo el diccionario a usar
+
