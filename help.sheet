@@ -351,9 +351,21 @@ ________________________________________________________________________________
 
 # Comprobar si hay una pagina en el buscador
 	http://[IP]   o   https://[IP]
+	Ctrl U   o   View Page Source
+	Buscar el dominimo.
+
+# Editamos nuestro /etc/hosts/
+	sudo nano /etc/hosts/
+	[IP] [DOMAIN]
+	Ctrl O + Enter
+	Ctrl X
 
 
+FIRST STEPS
+_________________________________________________________________________________________
 
+# whatweb
+	whatweb -v blog.thm
 
 
 
