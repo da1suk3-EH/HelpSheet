@@ -354,26 +354,42 @@ ________________________________________________________________________________
 	Ctrl U   o   View Page Source
 	Buscar el dominimo.
 
-# Editamos nuestro /etc/hosts/
+# En caso de que este sin los CSS. Editamos nuestro /etc/hosts/
 	sudo nano /etc/hosts/
 	[IP] [DOMAIN]
 	Ctrl O + Enter
 	Ctrl X
 
 
-FIRST STEPS
+WHATWEB
 _________________________________________________________________________________________
 
-# whatweb
+# Enumera tecnilogias web y versiones: librerias de JS, servidores, direcciones email, frameworks, etc. 
 	whatweb -v blog.thm
 
+# Extension del navegador que hace la misma funcion: Wappalizer
 
 
+LINKFINDER
+_________________________________________________________________________________________
+
+# Enumera los link de la pagina web, la descargamos y instalamos.
+	https://github.com/GerbenJavado/LinkFinder
+	git clone https://github.com/GerbenJavado/LinkFinder.git
+	cd LinkFinder
+	python setup.py install
+	pip3 install -r requirements.txt
+
+# Lanzamos la herramienta
+	python3 linkfinder.py -i http://blog.thm -o cli
 
 
+SSLSCAN OPENSSL
+_________________________________________________________________________________________
 
-
-
+# Analiza el protocolo SSL/TLS, versiones, firmas, vulnerabilidades ssl (heartbleed), etc.
+	sslscan https://www.test.com   o   [RHOST]
+	openssl s_client -connect test.com:443   ---   ver certificados SSL
 
 
 
