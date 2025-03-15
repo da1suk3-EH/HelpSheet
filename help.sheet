@@ -169,7 +169,7 @@ ________________________________________________________________________________
 
 
 ===========================
-===     EXPLOTACION     ===
+===      PENTESTING     ===
 ===========================
 
 
@@ -365,7 +365,7 @@ WHATWEB
 _________________________________________________________________________________________
 
 # Enumera tecnilogias web y versiones: librerias de JS, servidores, direcciones email, frameworks, etc. 
-	whatweb -v blog.thm
+	whatweb -v test.com
 
 # Extension del navegador que hace la misma funcion: Wappalizer
 
@@ -380,26 +380,99 @@ ________________________________________________________________________________
 	python setup.py install
 	pip3 install -r requirements.txt
 
-# Lanzamos la herramienta
-	python3 linkfinder.py -i http://blog.thm -o cli
+# Lanzar la herramienta
+	python3 linkfinder.py -i http://www.test.com -o cli
 
 
-SSLSCAN OPENSSL
+SSLSCAN / OPENSSL
 _________________________________________________________________________________________
 
 # Analiza el protocolo SSL/TLS, versiones, firmas, vulnerabilidades ssl (heartbleed), etc.
-	sslscan https://www.test.com   o   [RHOST]
+	sslscan https://www.test.com   o   [IP]
 	openssl s_client -connect test.com:443   ---   ver certificados SSL
 
 
+NIKTO
+_________________________________________________________________________________________
+
+# Escaner de vulnerabilidades
+	nikto -h test.com
+	nikto -h 192.168.1.70 -p 8484
+
+
+FUZZING WEB
+_________________________________________________________________________________________
+
+# Sacar rutas activas
+	gobuster dir -u https://[IP] -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt
+	gobuster dir -u https://[IP] -w /usr/share/wordlists/dirb/big.txt [-o safeintxt.txt (opcional)]
+
+	dirb http://[IP]   ---   si no le especificas usa por defecto el common.txt
+	dirb http://[IP] -w /usr/share/wordlists/dirb/big.txt
+
+	dirsearch -u http://[IP]/ -w /usr/share/wordlists/dirb/big.txt -e php,js,html,txt,pdf,docx -f
+
+	dirbuster   ---   interfaz grafica
+
+# Sacar subdominios
+	gobuster vhost -u http://[IP]/ -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-20000.txt
+
+	ffuf -c -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-20000.txt -H "host:FUZZ.empline.thm" -u 'http://empline.thm/' -fs 14058
+
+	https://dnsdumpster.com/
+
+
+WEBCHECK
+_________________________________________________________________________________________
+
+# Herramienta web que enumera gran cantidad de informacion
+	https://web-check.xyz/
+
+
+CURL
+_________________________________________________________________________________________
+
+# Preguntar por los parametros de http
+	curl -X [PARAMETER] http://www.test.com
+	[PARAMETER]: GET, POST, PUT, DELETE, HEAD
+
+# Informacion banner grabbing web
+	curl -IL https://www.test.com
+
+https://www.keycdn.com/support/popular-curl-examples
+https://osint.com.ar/domina-curl-con-esta-guia-esencial-de-comandos/
+https://github.com/frizb/HackingWithCurl
+https://www.stationx.net/curl-cheat-sheet/
+https://manasharsh.medium.com/hacking-with-curl-unleash-the-cli-beast-fdf13ec342cc
+
+
+ZAPROXY
+_________________________________________________________________________________________
+
+# Aplicacion Kali que hace fuzzing, busquedas de vulnerabilidades, versiones, tecnologias, etc.
+
+
+WPSCAN ENUMERACION
+_________________________________________________________________________________________
+
+# Solo para WORDPRESS, funciona mejor con API TOKEN
+	wpscan --url [URL] --api-token [TOKEN]
+
+# Detecta vulnerabilidades, malas configuraciones y desactualizadas
+	wpscan --url http://www.test.com --api-token msmN6za0x9xq3lplCTjmB8KihQqKsulJK203QUKRQg0
+	wpscan --url [URL] -e u   ---   enumera usuarios
+
+
+
+===========================
+===   PENTESTING  WEB   ===
+===========================
 
 
 
 
 
-
-
-
+lsof -i  saber los puertos abiertos que tienes
 
 
 
