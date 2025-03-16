@@ -333,6 +333,18 @@ ________________________________________________________________________________
 	Ctrl X
 
 
+DNS
+_________________________________________________________________________________________
+
+# Pedir al DNS su base de datos de registros
+	dig AXFR [DOMAIN] @artemis.ttd.net   ---   el @ solo en casos de tener varios servidores
+
+# Enumerar informacion del DNS
+	nslookup
+	> set type=NS
+	> [DOMAIN]
+
+
 WHATWEB
 _________________________________________________________________________________________
 
@@ -345,7 +357,7 @@ ________________________________________________________________________________
 LINKFINDER
 _________________________________________________________________________________________
 
-# Enumera los link de la pagina web, la descargamos y instalamos.
+# Enumera los link de la pagina web, la descargamos e instalamos.
 	https://github.com/GerbenJavado/LinkFinder
 	git clone https://github.com/GerbenJavado/LinkFinder.git
 	cd LinkFinder
@@ -424,6 +436,21 @@ ________________________________________________________________________________
 # Aplicacion Kali que hace fuzzing, busquedas de vulnerabilidades, versiones, tecnologias, etc.
 
 
+WAFW00F
+_________________________________________________________________________________________
+
+# Saber si la pagina web esta detras de un WAF
+	waf00f https://www.test.com
+
+
+HEXHTTP
+_________________________________________________________________________________________
+
+# Identificador de vulnerabilidades, https://github.com/c0dejump/HExHTTP
+	git clone https://github.com/c0dejump/HExHTTP.git
+	python3 hexhttp.py -u 'https://test.com/'
+
+
 WPSCAN ENUMERACION
 _________________________________________________________________________________________
 
@@ -433,6 +460,7 @@ ________________________________________________________________________________
 # Detecta vulnerabilidades, malas configuraciones y desactualizadas
 	wpscan --url http://www.test.com --api-token msmN6za0x9xq3lplCTjmB8KihQqKsulJK203QUKRQg0
 	wpscan --url [URL] -e u   ---   enumera usuarios
+	wpscan --url [URL] -e vp   ---   enumera plugins vulnerables
 
 
 
@@ -442,14 +470,31 @@ ________________________________________________________________________________
 
 
 
+LOGIN ATT DICTIONARY
+_________________________________________________________________________________________
+
+# WPSCAN # Solo para webs de wordpress
+	wpscan --url [URL] --usernames users.txt --passwords rockyou.txt --max-threads 5
+
+# HYDRA # La informacion la sacamos del inspector en Network, al lanzar la peticion. Header y Cookie
+	hydra -L user.txt -P rockyou.txt [IP] http-post-form "[URL]:[TOKEN-URL]:Login failed"
+	ex:
+	hydra -L /home/kali/Downloads/users.txt -P /usr/share/wordlists/rockyou.txt 'http-get-form://10.10.134.16/vulnerabilities/brute/:username=^USER^&password=^PASS^&Login=Login:H=Cookie\:PHPSESSID=050toadub7n33f96ehi7jo83o1; security=low:F=Username and/or password incorrect' 
+	hydra -l admin -P /usr/share/wordlists/rockyou.txt 127.0.0.1 http-get-form "/vulnerabilities/brute/:username=^USER^&password=^PASS^&Login=Login:Username and/or password incorrect.:H=Cookie: security=low; PHPSESSID=rt5o26sooph0v8p5nuarofj346"
+	hydra -L users.txt -P /usr/share/wordlists/rockyou.txt 10.10.188.51 http-post-form "/wp-login.php:log=^USER^&pwd=^PASS^&wp-submit=Log+In&redirect_to=http%3A%2F%2Fblog.thm%2Fwp-admin%2F&testcookie=1:The password you entered for the username"
+	hydra -L users.txt -P /usr/share/wordlists/rockyou.txt [IP] http-post-form '/wordpress/wp-login.php:log=^USER^&pwd=^PASS^:S=302'   ---   Panel wordpress que no muestra error y redirecciona
 
 
-lsof -i  saber los puertos abiertos que tienes
+COMMAND INJECTION
+_________________________________________________________________________________________
 
 
 
 
 
+
+
+https://cpdos.org/
 
 
 
@@ -495,7 +540,7 @@ ________________________________________________________________________________
 
 # Arrancar el servicio de Tor y comprobar su estado
 	sudo service tor start
-	sudo service tor status
+	sudo service tor status   ---   tiene que estar activo
 
 # Editar /etc/proxychains4.conf
 	sudo nano /etc/proxychains4.conf   o   sudo nano /etc/proxychains.conf
@@ -512,7 +557,7 @@ Ctrl X
 # Ya puedes hacer comandos en anonimo
 	sudo proxychains nmap -vv -sT -Pn -n -sV -O <IP>
 	sudo proxychains dirb <HOST> <WORDLISTS>
-	sudo proxychains firefox https://www.upgradehub.com/
+	proxychains firefox https://www.upgradehub.com/
 	sudo proxychains nikto –h <HOST>
 
 # Entrar en https://ipleak.net/
