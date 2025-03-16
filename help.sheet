@@ -58,34 +58,6 @@ FOR LEGAL PURPOSES ONLY:
 
 
 
-
-KALI TOOLS
-_________________________________________________________________________________________
-
-# Actualizar e instalar todas la herramientas de Kali Linux
-	sudo apt update && sudo apt upgrade -y
-	sudo apt update && sudo apt install kali-tools-*
-
-
-ALIAS
-_________________________________________________________________________________________
-
-# Crear alias para agilizar trabajo
-	echo "$SHELL"
-		/bin/bash	nano ~/.bashrc
-		/bin/zsh	nano ~/.zshrc
-		/bin/fish	nano ~/.config/fish/config.fish
-	sudo nano ~/.zshrc
-# Introduces alias
-	alias upy="sudo apt update && sudo apt upgrade -y"
-	Ctrl+O (guarda) y enter
-	Ctrl+X (cierra)
-		/bin/bash	source ~/.bashrc
-		/bin/zsh	source ~/.zshrc
-		/bin/fish	source ~/.config/fish/config.fish
-
-
-
 ===========================
 ===     ENUMERACION     ===
 ===========================
@@ -179,7 +151,7 @@ ________________________________________________________________________________
 
 # Actualizar
 	sudo apt install metasploit-framework
-# Arranque
+# Arrancar
 	msfconsole
 # Mostrar categorias
 	show [CATEGORY]
@@ -387,7 +359,7 @@ ________________________________________________________________________________
 SSLSCAN / OPENSSL
 _________________________________________________________________________________________
 
-# Analiza el protocolo SSL/TLS, versiones, firmas, vulnerabilidades ssl (heartbleed), etc.
+# Analizar el protocolo SSL/TLS, versiones, firmas, vulnerabilidades ssl (heartbleed), etc.
 	sslscan https://www.test.com   o   [IP]
 	openssl s_client -connect test.com:443   ---   ver certificados SSL
 
@@ -481,17 +453,85 @@ lsof -i  saber los puertos abiertos que tienes
 
 
 
+===========================
+===    SETTING  KALI    ===
+===========================
 
 
 
+KALI TOOLS
+_________________________________________________________________________________________
+
+# Actualizar e instalar todas la herramientas de Kali Linux
+	sudo apt update && sudo apt upgrade -y
+	sudo apt update && sudo apt install kali-tools-*
+
+
+ALIAS
+_________________________________________________________________________________________
+
+# Crear alias para agilizar trabajo
+	echo "$SHELL"
+		/bin/bash	nano ~/.bashrc
+		/bin/zsh	nano ~/.zshrc
+		/bin/fish	nano ~/.config/fish/config.fish
+	sudo nano ~/.zshrc
+# Introducir alias
+	alias upy="sudo apt update && sudo apt upgrade -y"
+	Ctrl+O (guarda) y enter
+	Ctrl+X (cierra)
+		/bin/bash	source ~/.bashrc
+		/bin/zsh	source ~/.zshrc
+		/bin/fish	source ~/.config/fish/config.fish
+
+
+ANONIMATO
+_________________________________________________________________________________________
+
+# Lanzar el comando para la instalación de Tor
+	sudo apt update
+	sudo apt install tor
+	sudo apt install tor torbrowser-launcher -y
+
+# Arrancar el servicio de Tor y comprobar su estado
+	sudo service tor start
+	sudo service tor status
+
+# Editar /etc/proxychains4.conf
+	sudo nano /etc/proxychains4.conf   o   sudo nano /etc/proxychains.conf
+
+	dynamic_chain
+	#strict_chain
+	.
+	socks4  127.0.0.1 9050
+	socks5  127.0.0.1 9050
+
+Ctrl O + enter
+Ctrl X
+
+# Ya puedes hacer comandos en anonimo
+	sudo proxychains nmap -vv -sT -Pn -n -sV -O <IP>
+	sudo proxychains dirb <HOST> <WORDLISTS>
+	sudo proxychains firefox https://www.upgradehub.com/
+	sudo proxychains nikto –h <HOST>
+
+# Entrar en https://ipleak.net/
+	Si esta vacio: "Your IP addresses - WebRTC detection"
+
+# Abrir otra pestaña y escribir:
+	about:config
+	media.peerconnection.enabled	FALSE
+
+# Refrescar https://ipleak.net/ debe salir: "No leak, RTCPeerConnection not available."
 
 
 
+===========================
+===     COMMAND ATT     ===
+===========================
 
 
 
-
-HELP STAT
 _________________________________________________________________________________________
 
 # arp-scan # Enumera los host que hay en la red. 
