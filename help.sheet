@@ -585,6 +585,20 @@ ________________________________________________________________________________
 	sudo apt update && sudo apt upgrade -y
 
 
+VIRTUAL ENVIRONMENT
+_________________________________________________________________________________________
+
+# Para evitar conflictos entre configuraciones y librerias de Python
+# Ir a la ubicacion del proyecto o herramienta y crear entorno virtual myenv
+	python3 -m venv myenv
+# Activar el entorno
+	source myenv/bin/activate
+# Instalar los paquetes
+	ex: pip install -r requirements.txt
+# Desactivar el entorno virtual
+	deactivate
+
+
 ALIAS
 _________________________________________________________________________________________
 
@@ -603,18 +617,16 @@ ________________________________________________________________________________
 		/bin/fish	source ~/.config/fish/config.fish
 
 
-ANONIMATO
+ANONYMITY
 _________________________________________________________________________________________
 
 # Lanzar el comando para la instalación de Tor
 	sudo apt update
 	sudo apt install tor
 	sudo apt install tor torbrowser-launcher -y
-
 # Arrancar el servicio de Tor y comprobar su estado
 	sudo service tor start
 	sudo service tor status   ---   tiene que estar activo
-
 # Editar /etc/proxychains4.conf
 	sudo nano /etc/proxychains4.conf   o   sudo nano /etc/proxychains.conf
 
@@ -632,14 +644,11 @@ Ctrl X
 	sudo proxychains dirb <HOST> <WORDLISTS>
 	proxychains firefox https://www.upgradehub.com/
 	sudo proxychains nikto –h <HOST>
-
 # Entrar en https://ipleak.net/
 	Si esta vacio: "Your IP addresses - WebRTC detection"
-
 # Abrir otra pestaña y escribir:
 	about:config
 	media.peerconnection.enabled	FALSE
-
 # Refrescar https://ipleak.net/ debe salir: "No leak, RTCPeerConnection not available."
 
 
