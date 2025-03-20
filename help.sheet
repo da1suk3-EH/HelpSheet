@@ -59,12 +59,12 @@ FOR LEGAL PURPOSES ONLY:
 
 
 ===========================
-===     ENUMERACION     ===
+===     ENUMERATION     ===
 ===========================
 
 
 
-DESCUBRIMIENTO DE HOSTS
+HOSTS DISCOVERY
 _________________________________________________________________________________________
 
 # Enumera los host
@@ -662,18 +662,21 @@ Ctrl X
 _________________________________________________________________________________________
 
 # arp-scan # Enumera los host que hay en la red. 
--I		[interfaz] para indicar el interfaz si fuese necesario
--g		ignora los duplicados
+-I			[interfaz] para indicar el interfaz si fuese necesario
+-g			ignora los duplicados
 _________________________________________________________________________________________
 
 # nmap # Enumera los puertos abiertos, solo los 1000 mas comunes.
--vv		lista mientras se ejecuta
--sV		detecta servicios y versiones 
--p-		comprueba todos los puertos
--p[puerto]	escanea el puerto indicado
--sC		lanza scripts
--Pn		no hace el ping
---script	elegir un script para utilizar.
+-vv			lista mientras se ejecuta
+-sV			detecta servicios y versiones 
+-p-			comprueba todos los puertos
+-p[PORT]		escanea el puerto indicado
+-sC			lanza scripts
+-Pn			desactiva las solicitudes de eco ICMP
+-n			desactiva la resolución DNS
+-sn			desactiva el escaneo de puertos
+--disable-arp-ping	desactiva escaneo de ping ARP
+--script		elegir un script para utilizar.
 	locate .nse | xargs grep "categories" | grep -oP '".*?"' | sort -u   ---   muestra las categorias
 		ex: nmap -p[PUERTO] [IP] --script="categoria"
 	listar scripts:
@@ -682,36 +685,37 @@ ________________________________________________________________________________
 	ex: nmap -vv -sV -p445 --script smb-vuln-cve2009-3103.nse [RHOST]   ---   usa ese script
 	ex: nmap -vv -sV -p445 --script vuln [RHOST]   ---   usa todos los scripts con "vuln"
 	ex: nmap -vv -sV -p445 --script smb-vuln-* [RHOST]   ---   usa solo los que empiezen por "smb-vuln-"
--oN[name]	guarda los resultados en txt
--T0 a -T5	velocidad del scaneo T3 es la velocidad estandar (-T5 solo entorno controlado)
--A		intenta detectar versiones y SO (solo entorno controlado)
+-oN [NAME]		guarda los resultados en txt
+-oX [NAME]		guarda los resultados en xml
+-T0 a -T5		velocidad del scaneo T3 es la velocidad estandar (-T5 solo entorno controlado)
+-A			intenta detectar versiones y SO (solo entorno controlado)
 
 
 # nmap firewall
---mtu 8 y 16	reduce el tamaño de los paquetes
--f		reduce el tamaño de los paquetes al minimo
---source-port	configura el puerto de origen, imitando la petición desde otro puerto
--D		falsea IPs, enviando paquetes falsos a la red (tu IP va incluida)
---spoof-mac	falsifica la direccion MAC de origen
--sS		realiza escaneo SYN sin establecer una conexion completa
---max-rate	controla la velocidad
+--mtu 8 y 16		reduce el tamaño de los paquetes
+-f			reduce el tamaño de los paquetes al minimo
+--source-port		configura el puerto de origen, imitando la petición desde otro puerto
+-D			falsea IPs, enviando paquetes falsos a la red (tu IP va incluida)
+--spoof-mac		falsifica la direccion MAC de origen
+-sS			realiza escaneo SYN sin establecer una conexion completa
+--max-rate		controla la velocidad
 _________________________________________________________________________________________
 
 # smbclient # Enumera,modifica,controla los recursos compartidos
--L		lista los recursos compartidos
--N		no pide la contraseña
+-L			lista los recursos compartidos
+-N			no pide la contraseña
 _________________________________________________________________________________________
 
 # smbclient operations #
-dir		lista recursos
-prompt off	no pregunta con mget y mput la confirmacion de tranferencia
-mget *		copia todos los recursos de la carpeta
-get		copia el recurso seleccionado
+dir			lista recursos
+prompt off		no pregunta con mget y mput la confirmacion de tranferencia
+mget *			copia todos los recursos de la carpeta
+get			copia el recurso seleccionado
 _________________________________________________________________________________________
 
 # hydra #
--l		si conocemos el usuario
--L		si no conocemos el usuario añaciendo el diccionario a usar
--p		si conocemos la contraseña
--P		si no conocemos la contraseña añaciendo el diccionario a usar
+-l			si conocemos el usuario
+-L			si no conocemos el usuario añaciendo el diccionario a usar
+-p			si conocemos la contraseña
+-P			si no conocemos la contraseña añaciendo el diccionario a usar
 
