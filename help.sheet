@@ -119,10 +119,10 @@ ________________________________________________________________________________
 
 # Enumera los puertos abiertos
 	sudo nmap -vv -sC -sV -p- [RHOST]
-	sudo nmap -sV -sU [RHOST]   ---   escaneo UDP
-	sudo nmap -T4 -sC -sV --script vuln [RHOST]   ---   busca vuln
+	sudo nmap -vv -sV -sU [RHOST]   ---   escaneo UDP
+	sudo nmap -vv -T4 -sC -sV --script vuln [RHOST]   ---   busca vuln
 	sudo nmap -vv [rango IP/MS]
-	sudo nmap -sC -sV -p- --scan-delay 5s [RHOST]
+	sudo nmap -vv -sC -sV -p- --scan-delay 5s [RHOST]
 
 # nmap firewall
 	sudo nmap -vv -sV --mtu 16 --source-port 443 --spoof-mac 81:49:fd:8a:46:51 [RHOST]
@@ -913,6 +913,7 @@ ________________________________________________________________________________
 
 # Linux
 	find / -type f -name "*.txt"
+	find / -type f -name "flag.txt"
 	find / -type f -name "user.txt"
 	find / -type f -name "root.txt"
 
@@ -966,34 +967,21 @@ ________________________________________________________________________________
 # 1.-
 	script /dev/null -c bash
 	ctrl+z
-	stty raw-echo
-	fg
-	reset
-	xterm
+	stty raw -echo; fg
+	reset xterm
 	export TERM=xterm
 	export SHELL=bash
 	stty rows 52 columns 180
 # 2.-
-	script /dev/null -c bash
-	ctrl+z
-	stty raw-echo
-	fg
-	reset
-	xterm
-	export TERM=xterm
-	export SHELL=bash
-	stty rows 52 columns 180
-# 3.-
 	python3 -c 'import pty; pty.spawn("/bin/bash")'
 	export TERM=screen-256color
 	[Ctrl + z]
 	echo $TERM
-	stty raw -echo
-	fg
-	[INTRO]
-# 4.-
+	stty raw -echo; fg
+	export TERM=xterm-256color
+# 3.-
 	oneliner: stty raw -echo; fg; ls; export SHELL=/bin/bash; export TERM=screen; stty rows 38 columns 116; reset;
-# 5.-
+# 4.-
 	script -q /dev/null -c bash
 	/usr/bin/script -qc /bin/bash /dev/null
 
