@@ -111,15 +111,15 @@ NMAP
 _________________________________________________________________________________________
 
 # Enumera los puertos abiertos
-	sudo nmap -vv -sC -sV -p- [RHOST]
-	sudo nmap -vv -sV -sU [RHOST]   ---   escaneo UDP
-	sudo nmap -vv -T4 -sC -sV --script vuln [RHOST]
-	sudo nmap -vv [rango IP/MS]
-	sudo nmap -vv -sC -sV -p- --scan-delay 5s [RHOST]
+	nmap -vv -sVC -T5 [RHOST]   ---   CTF
+	nmap -vv -sC -sV -p- [RHOST]
+	nmap -vv -sV -sU [RHOST]   ---   escaneo UDP
+	nmap -vv -T5 -sV --script vuln [RHOST]
+	nmap -vv [rango IP/MS]
 
 # nmap firewall
-	sudo nmap -vv -sV --mtu 16 --source-port 443 --spoof-mac 81:49:fd:8a:46:51 [RHOST]
-	sudo nmap -vv -sV -f -sS -D 8.8.8.8,20.20.20.20,192.168.54.20,24.132.225.31 [RHOST]
+	nmap -vv -sV --mtu 16 --source-port 443 --spoof-mac 81:49:fd:8a:46:51 [RHOST]
+	nmap -vv -sV -f -sS -D 8.8.8.8,20.20.20.20,192.168.54.20,24.132.225.31 [RHOST]
 
 # https://nmap.org/man/es/index.html
 
@@ -134,6 +134,8 @@ ________________________________________________________________________________
 	ftp> ls
 	ftp> get [FILE]
 	exit
+# Saber la version del proFTPD
+	nc 10.10.108.111 ftp
 
 
 SMB 445
@@ -219,7 +221,7 @@ ________________________________________________________________________________
 # Busqueda exploits en Kali. Es espejo de exploit-db.com.
 	sudo apt update && apt -y install exploitdb
 	searchsploit MS17-010
-	searchsploit -m 422315
+	searchsploit -m 42315
 # https://acortar.link/searchsploit
 
 # GitHub > code > copiar reco
@@ -757,7 +759,7 @@ find . -iname '*config*' -type f -exec grep -nie 'pass.*=' --color=always /dev/n
 
 # ENUM Auto LinPEAS #
 	wget https://github.com/peass-ng/PEASS-ng/releases/latest/download/linpeas.sh
-
+	cd /usr/share/peass/linpeas
 
 # KERNEL EXPLOITS # Versiones muy desactualizadas
 	lsb_release -a   ---   distribucion exacta de ubuntu
@@ -843,7 +845,7 @@ ________________________________________________________________________________
 # LISTA DE PERMISOS # https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/icacls
 
 # ENUM Auto # WinPEAS	
-	cd /usr/share/peass/WinPEAS
+	/usr/share/peass/winpeas
 
 
 # INSECURE SERVICE PERMISSIONS # Permisos inseguros en servicios. Preguntar servicio y el programa
