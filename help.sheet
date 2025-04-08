@@ -260,19 +260,19 @@ ________________________________________________________________________________
 
 
 # Repositorios de diccionarios
-# https://github.com/danielmiessler/SecLists
-# https://github.com/hackingyseguridad/diccionarios/tree/master
+	https://github.com/danielmiessler/SecLists
+	https://github.com/hackingyseguridad/diccionarios/tree/master
 
 # Kali
 	/usr/share/wordlists/   ---   ubicacion de dicc
-	cat myrockyou.txt | grep [CAMPO]   ---   saber si esta en la lista
+	cat rockyou.txt | grep [CAMPO]   ---   saber si esta en la lista
 
 
 HASH
 _________________________________________________________________________________________
 
 # Hash identifier / verifier WEB
-# https://hashes.com/en/decrypt/hash
+	https://hashes.com/en/decrypt/hash
 
 # Hash identifier Kali
 	hash-identifier
