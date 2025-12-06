@@ -995,18 +995,9 @@ ________________________________________________________________________________
 PIVOTING
 _________________________________________________________________________________________
 
-
-
-
-
-
-
-
-
-
-
-
-
+.
+.
+.
 
 
 TRATAMIENTO DE IMAGENES
@@ -1019,6 +1010,9 @@ strings imagen.png   ---   sacar los strings, texto, datos ocultos de una imagen
 BORRAR HUELLAS
 _________________________________________________________________________________________
 
+.
+.
+.
 
 
 ===========================
@@ -1118,10 +1112,7 @@ ________________________________________________________________________________
 # Activar el payload en target y listo
 	
 	
-
-
-
-	https://github.com/antonioCoco/ConPtyShell
+https://github.com/antonioCoco/ConPtyShell
 
 
 VIRTUAL ENVIRONMENT
